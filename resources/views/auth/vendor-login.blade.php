@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.home')
 
 @section('title', 'Post Property - 2020Homes')
 
@@ -65,7 +65,7 @@
                         </div>
 
                         <!-- Service Selection -->
-                        <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <label class="form-label fw-semibold">Looking to</label>
                             <div class="row g-2">
                                 <div class="col-4">
@@ -77,7 +77,7 @@
                                     <label class="btn btn-outline-secondary w-100 py-2" for="service_rent">Rent</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <!-- Phone/Email Section -->
                         <div id="otpFormSection">

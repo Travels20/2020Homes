@@ -1,13 +1,25 @@
-@extends('layouts.header')
+@extends('layouts.home')
 
 @section('title', 'Properties')
 
 @section('content')
+@php
+    $titleMap = [
+        'plot' => 'Available Plots',
+        'flat' => 'Available Flats',
+        'agriculture' => 'Available Agricultural Land',
+    ];
+    $pageTitle = $titleMap[$filterType ?? ''] ?? 'Available Properties';
+    $pageSubtitle = !empty($filterCity)
+        ? "Verified listings in {$filterCity}"
+        : 'Find your dream home from our verified listings';
+@endphp
+
 <!-- Hero Section -->
 <div class="position-relative py-5 bg-gradient-primary text-white text-center">
     <div class="container py-5">
-        <h1 class="display-4 fw-bold mb-3">Available Properties</h1>
-        <p class="lead mb-0 opacity-75">Find your dream home from our verified listings</p>
+        <h1 class="display-4 fw-bold mb-3">{{ $pageTitle }}</h1>
+        <p class="lead mb-0 opacity-75">{{ $pageSubtitle }}</p>
     </div>
     <div class="position-absolute bottom-0 start-0 w-100 overflow-hidden" style="line-height: 0;">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" style="position: relative; display: block; width: calc(100% + 1.3px); height: 60px;">

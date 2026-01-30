@@ -4,21 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>{{ config('app.name', '2020Homes') }} - @yield('title', 'Dashboard')</title>
-    
+
+     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-    
+
     @stack('styles')
 </head>
 <body>
@@ -33,16 +35,16 @@
             @endif
             <span>{{ \App\Models\SiteSetting::get('site_name', '2020Homes') }}</span>
         </a>
-        
+
         <nav>
             <ul class="sidebar-nav">
                 @yield('sidebar-menu')
             </ul>
         </nav>
-        
+
         <div class="mt-auto pt-4">
             <div class="sidebar-footer">
-                <a href="{{ route('logout') }}" 
+                <a href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                    class="sidebar-nav-link text-danger">
                     <i class="bi bi-box-arrow-right sidebar-nav-icon"></i>
@@ -54,7 +56,7 @@
             </div>
         </div>
     </aside>
-    
+
     <!-- Main Content -->
     <main class="main-content">
         <!-- Top Navbar -->
@@ -65,26 +67,26 @@
                 </button>
                 <h1 class="navbar-title">@yield('page-title', 'Dashboard')</h1>
             </div>
-            
+
             <div class="navbar-actions">
                 <button class="navbar-icon-btn" id="darkModeToggle" data-bs-toggle="tooltip" title="Toggle Dark Mode">
                     <i class="bi bi-moon-fill"></i>
                 </button>
-                
+
                 <button class="navbar-icon-btn" data-bs-toggle="tooltip" title="Notifications">
                     <i class="bi bi-bell-fill"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">
                         3
                     </span>
                 </button>
-                
+
                 <div class="dropdown">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=667eea&color=fff" 
-                         alt="User Avatar" 
-                         class="user-avatar" 
-                         data-bs-toggle="dropdown" 
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=667eea&color=fff"
+                         alt="User Avatar"
+                         class="user-avatar"
+                         data-bs-toggle="dropdown"
                          aria-expanded="false">
-                    
+
                     <ul class="dropdown-menu dropdown-menu-end glass-card">
                         <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
@@ -99,7 +101,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Alerts -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show glass-card" role="alert">
@@ -107,14 +109,14 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
         @endif
-        
+
         @if(session('error'))
             <div class="alert alert-danger alert-dismissible fade show glass-card" role="alert">
                 <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
         @endif
-        
+
         @if($errors->any())
             <div class="alert alert-danger alert-dismissible fade show glass-card" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
@@ -126,13 +128,13 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
         @endif
-        
+
         <!-- Page Content -->
         <div class="content-wrapper">
             @yield('content')
         </div>
     </main>
-    
+
     @stack('scripts')
 </body>
 </html>

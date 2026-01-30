@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.home')
 
 @section('title', $property->title)
 
@@ -9,12 +9,12 @@
 
 <!-- Hero Banner -->
 <div class="position-relative" style="height: 60vh; min-height: 400px; background-color: #1a1a1a;">
-    <div class="position-absolute w-100 h-100" style="background-image: url('{{ $bgImage }}'); background-size: cover; background-position: center; opacity: 0.7;"></div>
-    <div class="position-absolute w-100 h-100" style="background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);"></div>
+    <div class="position-absolute w-100 h-100" style="background-image: url('{{ $bgImage }}'); background-size: cover; background-position: center;"></div>
+    <div class="position-absolute w-100 h-100"></div>
 
     <div class="container h-100 position-relative">
         <div class="d-flex flex-column justify-content-end h-100 pb-5">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-8">
                     <span class="badge bg-primary mb-2 text-uppercase">{{ $property->property_type }}</span>
                     <span class="badge bg-white text-dark mb-2 text-uppercase">{{ $property->listing_type }}</span>
@@ -30,7 +30,7 @@
                         <i class="bi bi-telephone-fill me-2"></i>Contact Agent
                     </a>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -39,6 +39,11 @@
     <div class="row g-5">
         <!-- Main Content -->
         <div class="col-lg-8">
+              <h1 class=" fw-bold  mb-2">{{ $property->title }}</h1>
+               <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-geo-alt-fill me-2 text-primary"></i>
+                        <span class="fs-5">{{ $property->city }}, {{ $property->state }}</span>
+                    </div>
             <!-- Key Features Grid -->
             <div class="card glass-card border-0 mb-5">
                 <div class="card-body p-4">
@@ -113,19 +118,76 @@
             </div>
             @endif
 
-             <!-- Address/Location -->
-            @if($property->address)
+            <!-- FAQs Section -->
+            @if($property->faqs && count($property->faqs) > 0)
+            <div class="mb-5">
+                <h4 class="fw-bold mb-3">Frequently Asked Questions</h4>
+                <div class="accordion" id="propertyFaqs">
+                    @foreach($property->faqs as $index => $faq)
+                    <div class="accordion-item border-0 mb-2 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }} fw-bold"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#faq{{ $index }}"
+                                    aria-expanded="{{ $index === 0 ? 'true' : 'false' }}">
+                                <i class="bi bi-question-circle me-2 text-primary"></i>
+                                {{ $faq['question'] ?? '' }}
+                            </button>
+                        </h2>
+                        <div id="faq{{ $index }}"
+                             class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                             data-bs-parent="#propertyFaqs">
+                            <div class="accordion-body text-secondary">
+                                {{ $faq['answer'] ?? '' }}
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <!-- Address/Location -->
+            @if($property->address || ($property->latitude && $property->longitude))
             <div class="mb-5">
                 <h4 class="fw-bold mb-3">Location</h4>
                 <div class="card border-0 bg-light">
                     <div class="card-body p-4">
-                         <div class="d-flex align-items-start">
+                        @if($property->address)
+                        <div class="d-flex align-items-start mb-3">
                             <i class="bi bi-geo-alt-fill text-primary fs-4 me-3 mt-1"></i>
                             <div>
                                 <h6 class="fw-bold mb-1">Address</h6>
                                 <p class="mb-0 text-secondary">{{ $property->address }}, {{ $property->city }}, {{ $property->state }}</p>
                             </div>
                         </div>
+                        @endif
+
+                        @if($property->latitude && $property->longitude)
+                        <div class="mb-3">
+                            <h6 class="fw-bold mb-2">Map location</h6>
+                            <div id="property-map-view" style="height: 320px; border-radius: 0.75rem; overflow: hidden;"></div>
+                        </div>
+                        @endif
+
+                        @if($property->nearby_places && count($property->nearby_places) > 0)
+                        <div>
+                            <h6 class="fw-bold mb-2">
+                                <i class="bi bi-pin-map me-2 text-primary"></i>Nearby places
+                            </h6>
+                            <ul class="mb-0 text-secondary ps-3">
+                                @foreach($property->nearby_places as $place)
+                                    <li class="mb-2">
+                                        <span class="fw-bold">{{ $place['label'] ?? '' }}</span>
+                                        @if(!empty($place['distance']))
+                                            <span class="text-muted small">&mdash; {{ $place['distance'] }}</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -183,6 +245,35 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
+</div>
+
+@if($property->latitude && $property->longitude)
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var lat = {{ json_encode((float) $property->latitude) }};
+            var lng = {{ json_encode((float) $property->longitude) }};
+
+            if (!lat || !lng || typeof L === 'undefined') {
+                return;
+            }
+
+            var map = L.map('property-map-view').setView([lat, lng], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map);
+        });
+    </script>
+@endif
 @endsection

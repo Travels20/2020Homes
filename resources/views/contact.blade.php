@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('layouts.home')
 
 @section('title', 'Contact Us')
 
@@ -29,7 +29,7 @@
                         </div>
                         <div class="ms-3">
                             <h5 class="fw-bold mb-1">Our Location</h5>
-                            <p class="text-secondary mb-0">123 Real Estate Avenue,<br>Jubilee Hills, Hyderabad, 500033</p>
+                            <p class="text-secondary mb-0">alda one, 28th Cross St., near Corner building, Indira Nagar, Adyar, Chennai, Tamil Nadu 600020</p>
                         </div>
                     </div>
 
@@ -39,7 +39,7 @@
                         </div>
                         <div class="ms-3">
                             <h5 class="fw-bold mb-1">Phone Number</h5>
-                            <p class="text-secondary mb-0">+91 98765 43210<br>+91 40 1234 5678</p>
+                            <p class="text-secondary mb-0">+91 944 500 2020<br>+91 944 555 2020</p>
                         </div>
                     </div>
 
@@ -91,8 +91,9 @@
                     </div>
                     <div class="col-12">
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
                             <label for="message">Message</label>
+                            <textarea class="form-control" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
+
                         </div>
                     </div>
                     <div class="col-12">
@@ -103,4 +104,41 @@
         </div>
     </div>
 </div>
+
+<!-- Background Video Section -->
+<section class="video-section py-5" style="position: relative; overflow: hidden; background: #000;">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="position-relative rounded-4 overflow-hidden shadow-lg" style="background: #000;">
+                    <!-- Video Container -->
+                    <video
+                        autoplay
+                        loop
+                        muted
+                        playsinline
+                        class="w-100 d-block"
+                        style="max-height: 500px; object-fit: cover;">
+                        <source src="{{ asset('images/jll-webm.webm') }}" type="video/webm"/>
+                        <source src="{{ asset('images/jll-mp4.mp4') }}" type="video/mp4"/>
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <!-- Dark Overlay -->
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 0, 0, 0.35); z-index: 1;"></div>
+
+                    <!-- Text Overlay -->
+                    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index: 2; width: 90%;">
+                        <h3 class="fw-bold mb-3 display-6">Transform Your Real Estate Journey</h3>
+                        <p class="lead mb-4">Discover premium properties with 2020Homes</p>
+                        <a href="{{ route('front.properties') }}" class="btn btn-danger btn-lg rounded-pill px-5 py-3 fw-bold">
+                            <i class="bi bi-search me-2"></i>Explore Properties
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection

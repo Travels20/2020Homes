@@ -31,6 +31,13 @@
 @endsection
 
 @section('content')
+    <div class="admin-dashboard-header mb-4">
+        <div>
+            <h2 class="admin-dashboard-title mb-1">Admin overview</h2>
+            <p class="admin-dashboard-subtitle mb-0">Monitor properties, approvals and new users in real time.</p>
+        </div>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="row g-4 mb-4">
         <!-- Total Properties -->
@@ -175,7 +182,7 @@
                         @forelse($users as $user)
                         <div class="list-group-item border-0 d-flex align-items-center px-4 py-3">
                             <div class="flex-shrink-0">
-                                <div class="avatar bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <div class="avatar avatar-sm bg-gradient-primary text-white">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             </div>

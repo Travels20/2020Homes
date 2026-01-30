@@ -1,14 +1,14 @@
-@extends('layouts.guest')
+@extends('layouts.home')
 
 @section('title', 'Register')
 
 @section('content')
-<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 py-5" 
+<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 py-5"
      style="background-color: #f4f6f9;">
-    
+
     <div class="card glass-card p-5" style="max-width: 500px; width: 100%; border: 1px solid rgba(0,0,0,0.05);">
         <div class="text-center mb-5">
-            <div class="btn-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+            <div class="btn-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
                  style="width: 64px; height: 64px; font-size: 32px;">
                 <i class="bi bi-person-plus-fill"></i>
             </div>
@@ -26,7 +26,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-person"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="text" class="form-control border-start-0 ps-0 bg-transparent"
                            id="name" name="name" value="{{ old('name') }}" required autofocus
                            placeholder="John Doe"
                            style="height: 50px;">
@@ -43,7 +43,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-envelope"></i>
                     </span>
-                    <input type="email" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="email" class="form-control border-start-0 ps-0 bg-transparent"
                            id="email" name="email" value="{{ old('email') }}" required
                            placeholder="name@example.com"
                            style="height: 50px;">
@@ -60,7 +60,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-telephone"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="text" class="form-control border-start-0 ps-0 bg-transparent"
                            id="phone" name="phone" value="{{ old('phone') }}" required
                            placeholder="9876543210"
                            style="height: 50px;">
@@ -77,7 +77,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-lock"></i>
                     </span>
-                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent"
                            id="password" name="password" required
                            placeholder="Minimum 8 characters"
                            style="height: 50px;">
@@ -94,7 +94,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-shield-lock"></i>
                     </span>
-                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent"
                            id="password_confirmation" name="password_confirmation" required
                            placeholder="Re-enter password"
                            style="height: 50px;">

@@ -22,16 +22,16 @@
             <span>Add Property</span>
         </a>
     </li>
-    <li class="sidebar-nav-item">
+    {{-- <li class="sidebar-nav-item">
         <a href="#" class="sidebar-nav-link">
             <i class="bi bi-cash-stack sidebar-nav-icon"></i>
             <span>Transactions</span>
         </a>
-    </li>
+    </li> --}}
     <li class="sidebar-nav-item">
         <a href="#" class="sidebar-nav-link">
             <i class="bi bi-envelope sidebar-nav-icon"></i>
-            <span>Inquiries</span>
+            <span>Enquiry</span>
         </a>
     </li>
     <li class="sidebar-nav-item">
@@ -68,15 +68,16 @@
                             <option>Agriculture</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Status</label>
-                        <select class="form-select form-control">
-                            <option>All Status</option>
-                            <option>Available</option>
-                            <option>Sold</option>
-                            <option>Reserved</option>
-                        </select>
-                    </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="form-select form-control">
+                                <option>All Status</option>
+                                <option>Draft</option>
+                                <option>Available</option>
+                                <option>Sold</option>
+                                <option>Reserved</option>
+                            </select>
+                        </div>
                     <div class="col-md-2">
                         <label class="form-label">Price Range</label>
                         <select class="form-select form-control">
@@ -88,14 +89,14 @@
                     </div>
                     <div class="col-md-2">
                         <a href="{{ route('admin.properties.create') }}" class="btn btn-gradient-primary w-100">
-                            <i class="bi bi-plus-circle me-2"></i>Add New
+                            <i class="bi bi-plus-circle me-2"></i>Add
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Properties Table -->
     <div class="card glass-card border-0">
         <div class="card-body p-0">
@@ -134,8 +135,10 @@
                             <td>
                                 <div class="d-flex flex-column gap-1">
                                     <span class="badge bg-light text-dark border text-uppercase">{{ $property->property_type }}</span>
-                                    @if($property->status == 'available')
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Available</span>
+                                    @if($property->status == 'draft')
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Draft (Hidden)</span>
+                                    @elseif($property->status == 'available')
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Published / Available</span>
                                     @elseif($property->status == 'sold')
                                         <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Sold</span>
                                     @else

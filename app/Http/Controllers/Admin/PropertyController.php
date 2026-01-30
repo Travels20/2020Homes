@@ -11,6 +11,33 @@ use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
+    protected function isAdminOrSuperAdmin(): bool
+    {
+        $role = Auth::user()->role ?? null;
+        return in_array($role, ['admin', 'superadmin'], true);
+    }
+
+    protected function isStaff(): bool
+    {
+        return (Auth::user()->role ?? null) === 'staff';
+    }
+
+    protected function findPropertyForCurrentUser(string $id, bool $withImages = false): Property
+    {
+        $query = Property::query();
+
+        if ($withImages) {
+            $query->with('images');
+        }
+
+        // Staff can only access their own properties.
+        if ($this->isStaff()) {
+            $query->where('user_id', Auth::id());
+        }
+
+        return $query->findOrFail($id);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,6 +45,15 @@ class PropertyController extends Controller
     {
         $properties = Property::latest()->paginate(10);
         return view('dashboards.admin.properties.index', compact('properties'));
+    }
+
+    /**
+     * Staff-only listing for properties created/owned by the staff user.
+     */
+    public function myProperties()
+    {
+        $properties = Property::where('user_id', Auth::id())->latest()->paginate(10);
+        return view('dashboards.staff.properties.index', compact('properties'));
     }
 
     /**
@@ -42,16 +78,43 @@ class PropertyController extends Controller
             'city' => 'required|string',
             'state' => 'required|string',
             'description' => 'required|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'nearby_places' => 'nullable|array',
+            'nearby_places.*.label' => 'nullable|string|max:255',
+            'nearby_places.*.distance' => 'nullable|string|max:255',
+            'faqs' => 'nullable|array',
+            'faqs.*.question' => 'nullable|string',
+            'faqs.*.answer' => 'nullable|string',
             'feature_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'status' => 'nullable|in:draft,available,sold,reserved',
+            // Admin-only (if present)
+            'is_verified' => 'nullable|boolean',
         ]);
+
+        $isAdmin = $this->isAdminOrSuperAdmin();
 
         // Create property first
         $slug = Str::slug($request->title) . '-' . time();
 
+        $nearbyPlaces = $request->input('nearby_places', []);
+        // Clean out completely empty rows and preserve structure for JSON storage
+        $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
+            return !empty($item['label']) || !empty($item['distance']);
+        }));
+
+        $faqs = $request->input('faqs', []);
+        // Clean out completely empty FAQ rows and preserve structure for JSON storage
+        $faqs = array_values(array_filter($faqs, function ($item) {
+            return !empty($item['question']) || !empty($item['answer']);
+        }));
+
         $property = Property::create([
             'user_id' => Auth::id(),
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
             'title' => $validated['title'],
             'slug' => $slug,
             'description' => $validated['description'],
@@ -63,8 +126,13 @@ class PropertyController extends Controller
             'area' => $validated['area'],
             'area_unit' => $request->input('area_unit', 'sq_ft'),
             'address' => $request->input('address'),
-            'status' => 'available',
-            'is_featured' => $request->has('is_featured'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),
+            'nearby_places' => !empty($nearbyPlaces) ? $nearbyPlaces : null,
+            'faqs' => !empty($faqs) ? $faqs : null,
+            'status' => $validated['status'] ?? 'draft',
+            'is_featured' => $isAdmin ? $request->has('is_featured') : false,
+            'is_verified' => $isAdmin ? $request->boolean('is_verified', true) : false,
             'bedrooms' => $request->input('bedrooms'),
             'bathrooms' => $request->input('bathrooms'),
             'furnished' => $request->input('furnished', 0),
@@ -106,8 +174,10 @@ class PropertyController extends Controller
             }
         }
 
+        $redirectRoute = $this->isStaff() ? 'admin.my-properties' : 'admin.properties.index';
+
         return redirect()
-            ->route('admin.properties.index')
+            ->route($redirectRoute)
             ->with('success', 'Property created successfully.');
     }
 
@@ -116,8 +186,10 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        $property = Property::with('images')->findOrFail($id);
-        return view('dashboards.admin.properties.show', compact('property'));
+        $property = $this->findPropertyForCurrentUser($id, true);
+
+        // No dedicated admin/staff "show" blade yet - redirect to the public view.
+        return redirect()->route('property.show', $property->slug);
     }
 
     /**
@@ -125,7 +197,7 @@ class PropertyController extends Controller
      */
     public function edit(string $id)
     {
-        $property = Property::with('images')->findOrFail($id);
+        $property = $this->findPropertyForCurrentUser($id, true);
         return view('dashboards.admin.properties.edit', compact('property'));
     }
 
@@ -134,7 +206,7 @@ class PropertyController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $property = Property::findOrFail($id);
+        $property = $this->findPropertyForCurrentUser($id);
 
         $validated = $request->validate([
             'title' => 'required|max:255',
@@ -145,13 +217,36 @@ class PropertyController extends Controller
             'city' => 'required|string',
             'state' => 'required|string',
             'description' => 'required|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'nearby_places' => 'nullable|array',
+            'nearby_places.*.label' => 'nullable|string|max:255',
+            'nearby_places.*.distance' => 'nullable|string|max:255',
+            'faqs' => 'nullable|array',
+            'faqs.*.question' => 'nullable|string',
+            'faqs.*.answer' => 'nullable|string',
             'feature_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'status' => 'nullable|in:draft,available,sold,reserved',
+            // Admin-only (if present)
+            'is_verified' => 'nullable|boolean',
         ]);
 
+        $isAdmin = $this->isAdminOrSuperAdmin();
+
+        $nearbyPlaces = $request->input('nearby_places', []);
+        $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
+            return !empty($item['label']) || !empty($item['distance']);
+        }));
+
+        $faqs = $request->input('faqs', []);
+        $faqs = array_values(array_filter($faqs, function ($item) {
+            return !empty($item['question']) || !empty($item['answer']);
+        }));
+
         // Update basic fields
-        $property->update([
+        $updateData = [
             'title' => $validated['title'],
             'description' => $validated['description'],
             'property_type' => $validated['property_type'],
@@ -162,11 +257,26 @@ class PropertyController extends Controller
             'area' => $validated['area'],
             'area_unit' => $request->input('area_unit', 'sq_ft'),
             'address' => $request->input('address'),
-            'is_featured' => $request->has('is_featured'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),
+            'nearby_places' => !empty($nearbyPlaces) ? $nearbyPlaces : null,
+            'faqs' => !empty($faqs) ? $faqs : null,
             'bedrooms' => $request->input('bedrooms'),
             'bathrooms' => $request->input('bathrooms'),
             'furnished' => $request->input('furnished', 0),
-        ]);
+            'status' => $validated['status'] ?? $property->status,
+            'updated_by' => Auth::id(),
+        ];
+
+        // Only admin/superadmin can set featured / verified.
+        if ($isAdmin) {
+            $updateData['is_featured'] = $request->has('is_featured');
+            if ($request->has('is_verified')) {
+                $updateData['is_verified'] = $request->boolean('is_verified');
+            }
+        }
+
+        $property->update($updateData);
 
         // Handle Feature Image Update
         if ($request->hasFile('feature_image')) {
@@ -216,8 +326,10 @@ class PropertyController extends Controller
             }
         }
 
+        $redirectRoute = $this->isStaff() ? 'admin.my-properties' : 'admin.properties.index';
+
         return redirect()
-            ->route('admin.properties.index')
+            ->route($redirectRoute)
             ->with('success', 'Property updated successfully.');
     }
 

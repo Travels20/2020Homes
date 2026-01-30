@@ -1,15 +1,15 @@
 
-@extends('layouts.guest')
+@extends('layouts.home')
 
 @section('title', 'Login')
 
 @section('content')
-<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100" 
+<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100"
      style="background-color: #f4f6f9;">
-    
+
     <div class="card glass-card p-5" style="max-width: 450px; width: 100%; border: 1px solid rgba(0,0,0,0.05);">
         <div class="text-center mb-5">
-            <div class="btn-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+            <div class="btn-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
                  style="width: 64px; height: 64px; font-size: 32px;">
                 <i class="bi bi-house-heart-fill"></i>
             </div>
@@ -27,7 +27,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-envelope"></i>
                     </span>
-                    <input type="email" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="email" class="form-control border-start-0 ps-0 bg-transparent"
                            id="email" name="email" required autofocus
                            placeholder="name@example.com"
                            style="height: 50px;">
@@ -44,7 +44,7 @@
                     <span class="input-group-text border-end-0 bg-transparent text-secondary">
                         <i class="bi bi-lock"></i>
                     </span>
-                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent" 
+                    <input type="password" class="form-control border-start-0 ps-0 bg-transparent"
                            id="password" name="password" required
                            placeholder="Enter your password"
                            style="height: 50px;">

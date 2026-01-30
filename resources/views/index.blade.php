@@ -1,100 +1,149 @@
-@extends('layouts.header')
+@extends('layouts.home')
 
 @section('title', '2020Homes')
 
 @section('content')
-    <!-- Hero Section with Carousel -->
-    <section class="hero-section position-relative overflow-hidden">
-        <!-- Background Carousel -->
-        <div id="heroCarousel" class="carousel slide carousel-fade h-100 w-100 position-absolute top-0 start-0" data-bs-ride="carousel" data-bs-interval="5000">
-            <div class="carousel-inner h-100">
-                @php
-                    $banners = \App\Models\SiteSetting::get('banners');
-                    $banners = $banners ? json_decode($banners) : [];
-                @endphp
+    <!-- Hero Section with Modern Bootstrap 5 Carousel -->
+    {{-- <section class="hero-section position-relative overflow-hidden">
+          <div id="heroCarousel" class="carousel slide carousel-fade h-100 w-100 position-absolute top-0 start-0" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
+            @php
+                $banners = \App\Models\SiteSetting::get('banners');
+                $banners = $banners ? json_decode($banners) : [];
+            @endphp
 
+            @if(count($banners) > 1)
+                <div class="carousel-indicators position-absolute bottom-0 start-50 translate-middle-x mb-4">
+                    @foreach($banners as $index => $banner)
+                        <button type="button"
+                                data-bs-target="#heroCarousel"
+                                data-bs-slide-to="{{ $index }}"
+                                class="{{ $index === 0 ? 'active' : '' }}"
+                                aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                aria-label="Slide {{ $index + 1 }}"
+                                style="width: 12px; height: 12px; border-radius: 50%; margin: 0 4px; border: 2px solid white;">
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="carousel-inner h-100">
                 @if(count($banners) > 0)
                     @foreach($banners as $index => $banner)
                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }} h-100">
-                            <div class="hero-slide h-100" style="background-image: url('{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($banner) }}'); background-size: cover; background-position: center; filter: brightness(0.7);"></div>
+                            <div class="hero-slide h-100 position-relative"
+                                 style="background-image: url('{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($banner) }}');
+                                         background-size: cover;
+                                         background-position: center;
+                                         background-attachment: fixed;">
+                                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.35);"></div>
+                            </div>
                         </div>
                     @endforeach
                 @else
                     <div class="carousel-item active h-100">
-                        <div class="hero-slide h-100" style="background-image: url('{{ asset('images/bannerimage.webp') }}'); background-size: cover; background-position: center; filter: brightness(0.7);"></div>
+                        <div class="hero-slide h-100 position-relative"
+                             style="background-image: url('{{ asset('images/bannerimage.webp') }}');
+                                     background-size: cover;
+                                     background-position: center;
+                                     background-attachment: fixed;">
+                             <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.35);"></div>
+                        </div>
                     </div>
                 @endif
             </div>
+
+               @if(count($banners) > 1)
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark bg-opacity-50 rounded-circle p-3" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark bg-opacity-50 rounded-circle p-3" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            @endif
         </div>
 
-        <!-- Overlay Content -->
-        <div class="container position-relative z-3 py-5">
+           <div class="container position-relative z-3 py-5">
             <div class="row min-vh-100 align-items-center">
                 <div class="col-lg-10 col-xl-8">
-                    <!-- Top Badges -->
-                    {{-- <div class="d-flex gap-2 mb-4">
-                        <span class="badge rounded-pill px-4 py-2 fw-bold" style="background-color: #b32d2e;">Buy</span>
-                        <span class="badge rounded-pill px-4 py-2 fw-bold" style="background-color: #b32d2e; opacity: 0.8;">Rent</span>
-                        <span class="badge rounded-pill px-4 py-2 fw-bold" style="background-color: #b32d2e; opacity: 0.8;">Commercial</span>
-                    </div> --}}
 
-                    <!-- Hero Title -->
-                    <h1 class="fw-bold text-white mb-3 hero-title-modern">Build Your Future, One <br> Property at a Time.</h1>
+                    <h1 class="fw-bold text-white mb-4 hero-title-modern"
+                        data-aos="fade-up" data-aos-delay="200">
+                        Build Your Future, One Property at a Time.
+                    </h1>
 
-                    <!-- Search Card Box -->
-                    <div class="search-card-container position-relative mb-5 scale-in">
-                        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                            <div class="card-body p-4">
-                                <form action="{{ route('front.properties') }}" method="GET" class="row g-3 align-items-end">
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold text-dark small mb-1">Looking for</label>
-                                        <input type="text" name="type" class="form-control border-0 bg-light py-2 rounded-3" placeholder="Enter type">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold text-dark small mb-1">Price</label>
-                                        <select name="price" class="form-select border-0 bg-light py-2 rounded-3">
-                                            <option value="">Price</option>
-                                            <option value="1000000">Up to 10 Lakhs</option>
-                                            <option value="5000000">Up to 50 Lakhs</option>
-                                            <option value="10000000">Up to 1 Cr</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold text-dark small mb-1">Locations</label>
-                                        <select name="location" class="form-select border-0 bg-light py-2 rounded-3">
-                                            <option value="">Location</option>
-                                            <option value="delhi">Delhi</option>
-                                            <option value="gurgaon">Gurgaon</option>
-                                            <option value="noida">Noida</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button type="submit" class="btn btn-search-green w-100 py-2 rounded-pill fw-bold">Search Properties</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- Category Bar -->
-                            <div class="category-bar py-2 px-3 d-flex flex-wrap gap-2 align-items-center" style="background-color: #b32d2e;">
-                                <a href="?type=plot" class="text-white text-decoration-none px-3 border-end border-white-50 small fw-bold">Plot</a>
-                                <a href="?type=house" class="text-white text-decoration-none px-3 border-end border-white-50 small fw-bold">House</a>
-                                <a href="?type=farmhouse" class="text-white text-decoration-none px-3 border-end border-white-50 small fw-bold">Farm House/Land</a>
-                                <a href="?type=flat" class="text-white text-decoration-none px-3 border-end border-white-50 small fw-bold">Flat/Apartment</a>
-                                <a href="?type=villa" class="text-white text-decoration-none px-3 small fw-bold">Independent Villa</a>
-                            </div>
-                        </div>
+                       <p class="text-white mb-5 fs-5 hero-subtitle"
+                       data-aos="fade-up" data-aos-delay="300">
+                        Discover your dream property from our extensive collection of residential plots, luxury flats, and agricultural land across India.
+                    </p>
+
+                       <div class="hero-actions d-flex gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="400">
+                        <a href="{{ route('front.properties') }}"
+                           class="btn btn-danger btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg">
+                            <i class="bi bi-search me-2"></i>Browse Properties
+                        </a>
+                        @auth
+                            <a href="{{ route('dashboard') }}"
+                               class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg">
+                                <i class="bi bi-plus-circle me-2"></i>Post Property Free
+                            </a>
+                        @else
+                            <a href="{{ route('vendor.register.page') }}"
+                               class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg">
+                                <i class="bi bi-plus-circle me-2"></i>Post Property Free
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Social Sidebar -->
-        <div class="social-sidebar-vertical d-none d-md-flex flex-column gap-3 py-4 px-3 align-items-center rounded-start position-absolute top-50 end-0 translate-middle-y z-3" style="background-color: #b32d2e;">
-            <a href="#" class="text-white fs-5"><i class="bi bi-twitter"></i></a>
-            <a href="#" class="text-white fs-5"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="text-white fs-5"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="text-white fs-5"><i class="bi bi-youtube"></i></a>
+          <div class="social-sidebar-vertical d-none d-lg-flex flex-column gap-3 py-4 px-3 align-items-center rounded-start position-absolute top-50 end-0 translate-middle-y z-3 shadow">
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Twitter">
+                <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="YouTube">
+                <i class="bi bi-youtube"></i>
+            </a>
+        </div>
+    </section> --}}
+
+    <!-- Full Width Video Banner Section -->
+    <section class="video-banner-section w-100 position-relative overflow-hidden" style="min-height: 600px; background: #000;">
+        <video
+            autoplay
+            loop
+            muted
+            playsinline
+            class="w-100 h-100 position-absolute top-0 start-0"
+            style="object-fit: cover; object-position: center;">
+            <source src="{{ asset('images/jll-webm.webm') }}" type="video/webm"/>
+            <source src="{{ asset('images/jll-mp4.mp4') }}" type="video/mp4"/>
+            Your browser does not support the video tag.
+        </video>
+
+        <!-- Dark Overlay for Better Text Visibility -->
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 0, 0, 0.40); z-index: 1;"></div>
+
+        <!-- Video Banner Content Overlay -->
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3" style="z-index: 2;">
+            <div class="container">
+                <h2 class="fw-bold display-5 mb-3">Premium Real Estate Solutions</h2>
+                <p class="lead mb-4 opacity-90">Your trusted partner for finding dream properties</p>
+                <a href="{{ route('front.properties') }}" class="btn btn-danger btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">
+                    <i class="bi bi-search me-2"></i>Explore Properties
+                </a>
+            </div>
         </div>
     </section>
+
 
     <!-- Featured Properties Section -->
 @if($featuredProperties->count() > 0)
@@ -136,6 +185,7 @@
                         <div class="position-absolute top-0 end-0">
                             <div class="status-badge bg-danger text-white px-3 py-2 fw-bold">
                                 {{ strtoupper($property->listing_type) }}
+                                {{-- {{ $property->status ?? 'Available' }} --}}
                             </div>
                         </div>
 
@@ -245,8 +295,147 @@
 </section>
 @endif
 
-       <!-- Property Types Section -->
-    <section class="py-5  bg-light" id="properties">
+    {{-- Separate property sections on Home page --}}
+    @if(($plotProperties ?? collect())->count() > 0)
+        <section class="py-5 bg-light" id="plots">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="fw-bold mb-1">Plots</h2>
+                        <p class="text-secondary mb-0">Verified residential plots</p>
+                    </div>
+                    <a href="{{ route('front.properties', ['type' => 'plot']) }}" class="btn btn-outline-danger rounded-pill fw-bold">
+                        View All Plots <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($plotProperties as $property)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 glass-card border-0 hover-lift transition-all" style="cursor: pointer;" onclick="window.location='{{ route('property.show', $property->slug) }}'">
+                                <div class="position-relative">
+                                    <img src="{{ $property->feature_image_url }}"
+                                         class="card-img-top"
+                                         alt="{{ $property->title }}"
+                                         style="height: 250px; object-fit: cover;"
+                                         onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                                    <div class="position-absolute top-0 start-0 m-3">
+                                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">plot</span>
+                                    </div>
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-gradient-primary shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">{{ $property->listing_type }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4">
+                                    <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
+                                    <p class="text-secondary small mb-3 text-truncate">
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                    </p>
+                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if(($flatProperties ?? collect())->count() > 0)
+        <section class="py-5 bg-light" id="flats">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="fw-bold mb-1">Flats</h2>
+                        <p class="text-secondary mb-0">Verified flats and apartments</p>
+                    </div>
+                    <a href="{{ route('front.properties', ['type' => 'flat']) }}" class="btn btn-outline-danger rounded-pill fw-bold">
+                        View All Flats <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($flatProperties as $property)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 glass-card border-0 hover-lift transition-all" style="cursor: pointer;" onclick="window.location='{{ route('property.show', $property->slug) }}'">
+                                <div class="position-relative">
+                                    <img src="{{ $property->feature_image_url }}"
+                                         class="card-img-top"
+                                         alt="{{ $property->title }}"
+                                         style="height: 250px; object-fit: cover;"
+                                         onerror="this.src='https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                                    <div class="position-absolute top-0 start-0 m-3">
+                                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">flat</span>
+                                    </div>
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-gradient-primary shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">{{ $property->listing_type }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4">
+                                    <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
+                                    <p class="text-secondary small mb-3 text-truncate">
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                    </p>
+                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if(($agricultureProperties ?? collect())->count() > 0)
+        <section class="py-5 bg-light" id="agriculture">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="fw-bold mb-1">Agricultural Land</h2>
+                        <p class="text-secondary mb-0">Verified agricultural land listings</p>
+                    </div>
+                    <a href="{{ route('front.properties', ['type' => 'agriculture']) }}" class="btn btn-outline-danger rounded-pill fw-bold">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($agricultureProperties as $property)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 glass-card border-0 hover-lift transition-all" style="cursor: pointer;" onclick="window.location='{{ route('property.show', $property->slug) }}'">
+                                <div class="position-relative">
+                                    <img src="{{ $property->feature_image_url }}"
+                                         class="card-img-top"
+                                         alt="{{ $property->title }}"
+                                         style="height: 250px; object-fit: cover;"
+                                         onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                                    <div class="position-absolute top-0 start-0 m-3">
+                                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">agriculture</span>
+                                    </div>
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-gradient-primary shadow-sm px-3 py-2 rounded-pill fw-bold text-capitalize">{{ $property->listing_type }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4">
+                                    <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
+                                    <p class="text-secondary small mb-3 text-truncate">
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                    </p>
+                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- Property Types Section -->
+    {{-- <section class="py-5 bg-light" id="property-categories">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Property Categories</h2>
@@ -254,7 +443,6 @@
             </div>
 
             <div class="row g-4">
-                {{-- Dynamic Categories based on Property Types --}}
                 <div class="col-md-4">
                     <div class="card glass-card border-0 h-100 property-card hover-lift transition-all" style="cursor: pointer;" onclick="window.location='{{ route('front.properties', ['type' => 'plot']) }}'">
                         <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop"
@@ -292,7 +480,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Features Section -->
 <section class="py-5" >
@@ -366,26 +554,19 @@
     </div>
 </section>
 
-<!-- Property Offer Section -->
-<section class="py-5 bg-light" id="properties">
+<!-- Property video Section -->
+<section class="py-5 bg-light" id="plot-offer">
     <div class="container px-0">
         <div class="row g-0">
             <div class="col-12">
-                <div class="card border-0 text-white property-card"
-                     style="cursor:pointer;"
-                     onclick="window.location='{{ route('front.properties', ['type' => 'plot']) }}'">
+                <div class="card border-0 text-white property-card overflow-hidden">
 
-                    <!-- Background Image -->
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&h=600&fit=crop"
-                         class="card-img"
-                         alt="Plots"
-                         style="height: 450px; object-fit: cover;">
-
-                    <!-- Text Overlay -->
-                    <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center"
-                         style="background: rgba(0,0,0,0.45);">
-                        <h2 class="fw-bold">Residential Plots</h2>
-                        <p class="small mb-0">Ready to Make Your Dream Property a Reality</p>
+                    <!-- Responsive YouTube Embed -->
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/lETjlaT-UeA?rel=0&modestbranding=1"
+                                title="Residential Plots - 2020Homes"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
                     </div>
 
                 </div>
@@ -639,17 +820,114 @@
     </div>
 </section>
 
+<!-- Appointment Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4 align-items-stretch">
+            <!-- Left Side - Form -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-lg p-2 p-md-3 h-100">
+                    <div class="mb-4">
+                        <h2 class="fw-bold mb-3">Schedule a Free Consultation</h2>
+                        <p class="text-secondary mb-0">Get expert advice on buying or selling your property</p>
+                    </div>
+                    <form action="" method="POST">
+                        @csrf
+                        <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" id="name" name="name" class="form-control form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control form-control" placeholder="Enter your email" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control form-control" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="preferred_date" class="form-label">Preferred Consultation Date</label>
+                            <input type="date" id="preferred_date" name="preferred_date" class="form-control form-control" required>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="message" class="form-label">Message (Optional)</label>
+                            <textarea id="message" name="message" class="form-control form-control" placeholder="Tell us more about your requirement" rows="3"></textarea>
+                        </div>
+                        <div class=" d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg py-2 fw-bold">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                Schedule Now
+                            </button>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side - Map & Address -->
+            <div class="col-lg-6">
+                <div class="h-100 d-flex flex-column gap-4">
+                    <!-- Map with Address Overlay -->
+                    <div class="position-relative" style="height: 450px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <!-- Map -->
+                        <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.0044524827524!2d80.2707!3d13.0627!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a526f73a5a5a5a5%3A0x5a5a5a5a5a5a5a5a!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1234567890"
+                                width="100%"
+                                height="100%"
+                                style="border:0; position: absolute; top: 0; left: 0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+
+                        <!-- Address Overlay at Bottom Left -->
+                        <div class="position-absolute bottom-0 start-0" style="z-index: 10; max-width: 380px;">
+                            <div class="card border-0 shadow-lg p-3 bg-white">
+                                <!-- Address 1 -->
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <div class="d-flex gap-2 align-items-start">
+                                        {{-- <div class="bg-primary text-white rounded-circle p-2" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <i class="bi bi-geo-alt-fill" style="font-size: 18px;"></i>
+                                        </div> --}}
+                                        <div class="flex-grow-1" style="min-width: 0;">
+                                            <h6 class="fw-bold mb-1 small">2020HOMES</h6>
+                                            <p class="text-secondary mb-2" style="font-size: 1rem; line-height: 1.3;">
+                                               No 72/32,28th Cross Street, <br>
+                                               Indira Nagar,Adyar,Chennai : 600020
+                                            </p>
+
+                                            <a href="tel:+919445002020" class="text-decoration-none text-primary fw-bold" style="font-size: 1rem;">
+                                                <i class="bi bi-telephone"></i> +91 944 500 2020
+                                            </a> <br>
+                                            <a href="mailto:info@2020homes.com" class="text-decoration-none text-primary fw-bold" style="font-size: 1rem;">
+                                                <i class="bi bi-envelope"></i> info@2020homes.com
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
   <!-- CTA Section -->
 <section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="card border-0 shadow-lg text-center p-5">
-                    <h2 class="fw-bold mb-4" style="font-size: 48px;">
+                    <h2 class="fw-bold mb-4 cta-heading-main">
                         Ready to Find Your Perfect Property?
                     </h2>
 
-                    <p class="text-secondary mb-5" style="font-size: 20px;">
+                    <p class="text-secondary mb-5 cta-subtitle-main">
                         Join thousands of satisfied customers who found their dream properties with us
                     </p>
 
@@ -674,160 +952,4 @@
 
 
 @endsection
-
-
-<style>
-.partner-logo {
-    transition: transform 0.3s ease;
-}
-
-.partner-logo:hover {
-    transform: translateY(-5px);
-}
-
-.partner-logo img {
-    filter: grayscale(100%);
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-.partner-logo:hover img {
-    filter: grayscale(0%);
-    opacity: 1;
-}
-.google-reviews-banner {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.z-1 {
-    z-index: 1;
-}
-
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-}
-.feature-box {
-    transition: transform 0.3s ease, background 0.3s ease;
-    border-radius: 15px;
-    /* background: rgba(255, 255, 255, 0.05); */
-    backdrop-filter: blur(10px);
-    /* border: 1px solid rgba(255, 255, 255, 0.1); */
-}
-
-.feature-box:hover {
-    transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.feature-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-icon i {
-    font-size: 2rem;
-    color: white;
-}
-
-.feature-box:hover .feature-icon {
-    transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
-
-.property-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.property-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
-}
-
-.property-image-wrapper {
-    overflow: hidden;
-    height: 240px;
-}
-
-.property-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.property-card:hover .property-image {
-    transform: scale(1.1);
-}
-
-.status-badge {
-    clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
-    padding-right: 2.5rem !important;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .property-image-wrapper {
-        height: 200px;
-    }
-
-    .status-badge {
-        font-size: 0.75rem;
-        padding: 0.5rem 2rem 0.5rem 1rem !important;
-    }
-}
-
-/* Icon styling */
-.card-body i {
-    font-size: 1rem;
-}
-
-/* Button hover effects */
-.btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: white;
-    border-color: #dc3545;
-}
-
-.btn-danger:hover {
-    background-color: #bb2d3b;
-    border-color: #bb2d3b;
-}
-.location-tabs {
-    font-size: 15px;
-    color: #333;
-}
-
-.location-tabs a {
-    color: #000;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.location-tabs a:hover {
-    text-decoration: underline;
-}
-
-.location-tabs span {
-    margin: 0 6px;
-    color: #666;
-}
-
-</style>
 

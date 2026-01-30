@@ -25,6 +25,8 @@ class Property extends Model
         'pincode',
         'latitude',
         'longitude',
+        'nearby_places',
+        'faqs',
         'price',
         'area',
         'area_unit',
@@ -41,7 +43,12 @@ class Property extends Model
 
      protected $casts = [
         'gallery_images' => 'array',
+        'nearby_places' => 'array',
+        'faqs' => 'array',
         'is_featured' => 'boolean',
+        'is_verified' => 'boolean',
+        'furnished' => 'boolean',
+        'parking' => 'boolean',
     ];
 
     public function user()

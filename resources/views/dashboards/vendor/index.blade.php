@@ -23,16 +23,16 @@
         </a>
     </li>
     <li class="sidebar-nav-item">
-        <a href="{{ route('vendor.sales.index') }}" class="sidebar-nav-link">
+        {{-- <a href="{{ route('vendor.sales.index') }}" class="sidebar-nav-link"> --}}
             <i class="bi bi-graph-up sidebar-nav-icon"></i>
             <span>Sales Tracking</span>
-        </a>
+        {{-- </a> --}}
     </li>
     <li class="sidebar-nav-item">
-        <a href="{{ route('vendor.earnings.index') }}" class="sidebar-nav-link">
+        {{-- <a href="{{ route('vendor.earnings.index') }}" class="sidebar-nav-link"> --}}
             <i class="bi bi-wallet2 sidebar-nav-icon"></i>
             <span>Earnings</span>
-        </a>
+        {{-- </a> --}}
     </li>
 @endsection
 
@@ -54,7 +54,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card bg-animated-gradient-2 border-0 h-100 shadow-sm">
                 <div class="card-body">
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card bg-animated-gradient-3 border-0 h-100 shadow-sm">
                 <div class="card-body">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-3">
             <div class="card bg-animated-gradient-4 border-0 h-100 shadow-sm">
                 <div class="card-body">
@@ -103,7 +103,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Quick Actions -->
     <div class="row g-4 mb-4">
         <div class="col-md-12">
@@ -123,7 +123,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Recent Properties & Performance -->
     <div class="row g-4">
         <!-- My Properties -->
@@ -135,12 +135,12 @@
                         View All <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
-                
+
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="property-card">
                             <div class="position-relative">
-                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" 
+                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop"
                                      class="property-image" alt="Property">
                                 <span class="badge-status badge-available position-absolute top-0 end-0 m-2">Available</span>
                             </div>
@@ -158,11 +158,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="property-card">
                             <div class="position-relative">
-                                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=200&fit=crop" 
+                                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=200&fit=crop"
                                      class="property-image" alt="Property">
                                 <span class="badge-status badge-sold position-absolute top-0 end-0 m-2">Sold</span>
                             </div>
@@ -183,7 +183,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Performance Stats -->
         <div class="col-lg-4">
             <div class="glass-card p-4 mb-4">
@@ -197,7 +197,7 @@
                         <div class="progress-bar" style="width: 85%; background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);"></div>
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-secondary">Response Rate</span>
@@ -207,7 +207,7 @@
                         <div class="progress-bar" style="width: 92%; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-white-50">Customer Rating</span>
@@ -222,7 +222,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Monthly Earnings -->
             <div class="glass-card p-4">
                 <h5 class="text-white mb-3"><i class="bi bi-calendar-month me-2"></i>This Month</h5>
