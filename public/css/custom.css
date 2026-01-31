@@ -60,11 +60,9 @@ main {
     background-color: #badc58 !important; /* Authentic light green from image */
     color: #1a1a1a !important;
     border-radius: 50px !important;
-    padding: 12px 35px !important;
+    padding: 5px 11px !important;
     font-weight: 700 !important;
     border: none !important;
-    font-size: 1.1rem !important;
-    margin-left: 15px !important;
     box-shadow: 0 4px 10px rgba(186, 220, 88, 0.3) !important;
 }
 

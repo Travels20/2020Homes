@@ -159,143 +159,6 @@
         </div>
     </section>
 
-
-    <!-- Featured Properties Section -->
-@if($featuredProperties->count() > 0)
-<section class="py-5 bg-light">
-    <div class="container">
-        <!-- Header with Location Filters -->
-        <div class="text-center mb-4">
-            <h2 class="fw-bold mb-2 text-danger">Your Home. Your Dream. Your Choice</h2>
-            <p class="text-secondary mb-4">Choose your plot from India's Largest Plotted Real Ecity_area Developer</p>
-            <!-- Location Tabs -->
-            <div class="d-flex gap-3 flex-wrap location-tabs mb-4">
-                <a href="{{ route('front.properties', ['city' => 'Chennai']) }}">Chennai</a>
-                <span>|</span>
-                <a href="{{ route('front.properties', ['city' => 'Coimbatore']) }}">Coimbatore</a>
-                <span>|</span>
-                <a href="{{ route('front.properties', ['city' => 'Trichy']) }}">Trichy</a>
-                <span>|</span>
-                <a href="{{ route('front.properties') }}">Other Locations</a>
-            </div>
-
-        </div>
-
-        {{-- <div class="row g-4">
-            @foreach($featuredProperties as $property)
-            <div class="col-lg-4 col-md-6">
-                <div class="property-card card h-100 border-0 shadow-sm overflow-hidden" onclick="window.location='{{ route('property.show', $property->slug) }}'" style="cursor: pointer;">
-                    <div class="position-relative property-image-wrapper">
-                        @php
-                            $imgSrc = $property->feature_image_url;
-                        @endphp
-
-                        <img src="{{ $imgSrc }}"
-                             class="card-img-top property-image"
-                             alt="{{ $property->title }}"
-                             onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
-
-                          <div class="position-absolute top-0 end-0">
-                            <div class="status-badge bg-danger text-white px-3 py-2 fw-bold">
-                                {{ strtoupper($property->listing_type) }}
-                                </div>
-                        </div>
-
-                         <div class="position-absolute bottom-0 start-0 m-3">
-                            <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold d-flex align-items-center gap-2">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                <span>{{ $property->city }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                      <div class="card-body p-3">
-                        <h5 class="card-title fw-bold mb-2 text-truncate" style="font-size: 1.1rem;">
-                            {{ $property->title }}
-                        </h5>
-
-                        <div class="row g-2 mb-3">
-                           <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-arrows-angle-expand text-secondary"></i>
-                                    <div>
-                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Area</small>
-                                        <span class="fw-bold" style="font-size: 0.85rem;">{{ $property->area }} {{ $property->area_unit }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            @if($property->property_type == 'flat')
-                               <div class="col-6">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="bi bi-door-closed text-secondary"></i>
-                                        <div>
-                                            <small class="text-secondary d-block" style="font-size: 0.75rem;">Beds/Baths</small>
-                                            <span class="fw-bold" style="font-size: 0.85rem;">{{ $property->bedrooms ?? 0 }} & {{ $property->bathrooms ?? 0 }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                 <div class="col-6">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <i class="bi bi-building text-secondary"></i>
-                                        <div>
-                                            <small class="text-secondary d-block" style="font-size: 0.75rem;">Type</small>
-                                            <span class="fw-bold text-capitalize" style="font-size: 0.85rem;">{{ $property->property_type }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                             <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-currency-rupee text-secondary"></i>
-                                    <div>
-                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Price</small>
-                                        <span class="fw-bold text-danger" style="font-size: 0.85rem;">₹ {{ number_format($property->price / 100000, 2) }} L</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                              <div class="col-6">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-check-circle text-secondary"></i>
-                                    <div>
-                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Status</small>
-                                        <span class="fw-bold text-success" style="font-size: 0.85rem;">{{ $property->status ?? 'Available' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                         <div class="row g-2">
-                            <div class="col-6">
-                                <button class="btn btn-outline-danger w-100 btn-sm fw-bold rounded-pill">
-                                    {{ ucfirst($property->property_type) }}
-                                </button>
-                            </div>
-                            <div class="col-6">
-                                <a href="{{ route('property.show', $property->slug) }}" class="btn btn-danger w-100 btn-sm fw-bold rounded-pill">
-                                    Explore Property
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div> --}}
-
-          {{-- <div class="text-center mt-5">
-            <a href="{{ route('front.properties') }}" class="btn btn-lg btn-danger px-5 rounded-pill fw-bold">
-                View All Properties
-                <i class="bi bi-arrow-right ms-2"></i>
-            </a>
-        </div> --}}
-    </div>
-</section>
-@endif
-
     {{-- Separate property sections on Home page --}}
     @if(($plotProperties ?? collect())->count() > 0)
         <section class="py-5 bg-light" id="plots">
@@ -482,6 +345,143 @@
             </div>
         </div>
     </section> --}}
+
+        <!-- Featured Properties Section -->
+@if($featuredProperties->count() > 0)
+<section class="py-5 bg-light">
+    <div class="container">
+        <!-- Header with Location Filters -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-2 text-danger">Your Home. Your Dream. Your Choice</h2>
+            <p class="text-secondary mb-4">Choose your plot from India's Largest Plotted Real Ecity_area Developer</p>
+            <!-- Location Tabs -->
+            <div class="d-flex gap-3 flex-wrap location-tabs mb-4">
+                <a href="{{ route('front.properties', ['city' => 'Chennai']) }}">Chennai</a>
+                <span>|</span>
+                <a href="{{ route('front.properties', ['city' => 'Coimbatore']) }}">Coimbatore</a>
+                <span>|</span>
+                <a href="{{ route('front.properties', ['city' => 'Trichy']) }}">Trichy</a>
+                <span>|</span>
+                <a href="{{ route('front.properties') }}">Other Locations</a>
+            </div>
+
+        </div>
+
+        <div class="row g-4">
+            @foreach($featuredProperties as $property)
+            <div class="col-lg-4 col-md-6">
+                <div class="property-card card h-100 border-0 shadow-sm overflow-hidden" onclick="window.location='{{ route('property.show', $property->slug) }}'" style="cursor: pointer;">
+                    <div class="position-relative property-image-wrapper">
+                        @php
+                            $imgSrc = $property->feature_image_url;
+                        @endphp
+
+                        <img src="{{ $imgSrc }}"
+                             class="card-img-top property-image"
+                             alt="{{ $property->title }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+
+                          <div class="position-absolute top-0 end-0">
+                            <div class="status-badge bg-danger text-white px-3 py-2 fw-bold">
+                                {{ strtoupper($property->listing_type) }}
+                                </div>
+                        </div>
+
+                         <div class="position-absolute bottom-0 start-0 m-3">
+                            <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold d-flex align-items-center gap-2">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>{{ $property->city }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                      <div class="card-body p-3">
+                        <h5 class="card-title fw-bold mb-2 text-truncate" style="font-size: 1.1rem;">
+                            {{ $property->title }}
+                        </h5>
+
+                        <div class="row g-2 mb-3">
+                           <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-arrows-angle-expand text-secondary"></i>
+                                    <div>
+                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Area</small>
+                                        <span class="fw-bold" style="font-size: 0.85rem;">{{ $property->area }} {{ $property->area_unit }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if($property->property_type == 'flat')
+                               <div class="col-6">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-door-closed text-secondary"></i>
+                                        <div>
+                                            <small class="text-secondary d-block" style="font-size: 0.75rem;">Beds/Baths</small>
+                                            <span class="fw-bold" style="font-size: 0.85rem;">{{ $property->bedrooms ?? 0 }} & {{ $property->bathrooms ?? 0 }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                 <div class="col-6">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-building text-secondary"></i>
+                                        <div>
+                                            <small class="text-secondary d-block" style="font-size: 0.75rem;">Type</small>
+                                            <span class="fw-bold text-capitalize" style="font-size: 0.85rem;">{{ $property->property_type }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                             <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-currency-rupee text-secondary"></i>
+                                    <div>
+                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Price</small>
+                                        <span class="fw-bold text-danger" style="font-size: 0.85rem;">₹ {{ number_format($property->price / 100000, 2) }} L</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                              <div class="col-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-check-circle text-secondary"></i>
+                                    <div>
+                                        <small class="text-secondary d-block" style="font-size: 0.75rem;">Status</small>
+                                        <span class="fw-bold text-success" style="font-size: 0.85rem;">{{ $property->status ?? 'Available' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="row g-2">
+                            <div class="col-6">
+                                <button class="btn btn-outline-danger w-100 btn-sm fw-bold rounded-pill">
+                                    {{ ucfirst($property->property_type) }}
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('property.show', $property->slug) }}" class="btn btn-danger w-100 btn-sm fw-bold rounded-pill">
+                                    Explore Property
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+          <div class="text-center mt-5">
+            <a href="{{ route('front.properties') }}" class="btn btn-lg btn-danger px-5 rounded-pill fw-bold">
+                View All Properties
+                <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+@endif
+
 
     <!-- Features Section -->
 <section class="py-5" >

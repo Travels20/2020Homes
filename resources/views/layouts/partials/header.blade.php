@@ -17,6 +17,12 @@
 @endphp
 
 <style>
+
+     /* Add padding for top header */
+    body {
+        padding-top: 130px; /* Adjust based on your header heights */
+    }
+
     /* Modern Navbar Styles */
     .modern-navbar {
         background: rgba(255, 255, 255, 0.95);
@@ -24,7 +30,17 @@
         box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         padding: 0.75rem 0;
         transition: all 0.3s ease;
+        top: 45px; /* Height of top header */
     }
+
+    /* Modern Navbar Styles */
+    /* .modern-navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        padding: 0.75rem 0;
+        transition: all 0.3s ease;
+    } */
 
     .modern-navbar.scrolled {
         background: rgba(255, 255, 255, 0.98);
@@ -256,7 +272,8 @@
     }
 </style>
 
-<nav class="navbar navbar-expand-lg fixed-top modern-navbar">
+{{-- <nav class="navbar navbar-expand-lg fixed-top modern-navbar"> --}}
+    <nav class="navbar navbar-expand-lg modern-navbar" style="position: fixed; left: 0; right: 0; z-index: 1030;">
     <div class="container">
         <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url('/') }}">
             @php $logoUrl = \App\Models\SiteSetting::url('logo'); @endphp
@@ -301,17 +318,19 @@
                         </a>
                     </li>
                     <!--login-->
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link modern-nav-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">
                             Login
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
 
-                <a class="btn whatsapp-head " href="https://wa.me/919445002020" target="_blank" title="Chat with us on WhatsApp">
+                {{-- <a class="btn whatsapp-head " href="https://wa.me/919445002020" target="_blank" title="Chat with us on WhatsApp">
                     <i class="bi bi-whatsapp"></i>
                     <span>944 500 2020</span>
-                </a>
+                </a> --}}
+                 <a href="{{ route('vendor.register.page') }}" class=" btn whatsapp-head ">Post Property <small>(Free)</small></a>
+
             </div>
         </div>
     </div>
