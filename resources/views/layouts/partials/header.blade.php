@@ -69,13 +69,13 @@
         left: 50%;
         width: 0;
         height: 2px;
-        background: linear-gradient(90deg, #10b981, #059669);
+        background: linear-gradient(90deg, #ddb5be, #d70a0a);
         transform: translateX(-50%);
         transition: width 0.3s ease;
     }
 
     .modern-nav-link:hover {
-        color: #10b981 !important;
+        color: #dc3545 !important;
     }
 
     .modern-nav-link:hover::before {
@@ -83,7 +83,7 @@
     }
 
     .modern-nav-link.active {
-        color: #10b981 !important;
+        color: #dc3545 !important;
         font-weight: 600;
     }
 
@@ -274,44 +274,37 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="ms-auto d-flex align-items-center">
                 <ul class="navbar-nav me-lg-3 mb-0">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link modern-nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
                             Home
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link modern-nav-link {{ $onPropertyList && $activeType === 'plot' ? 'active' : '' }}" href="{{ route('front.properties', ['type' => 'plot']) }}">
-                            Plots
-                        </a>
-                    </li>
+                    </li> --}}
+
                     <li class="nav-item">
                         <a class="nav-link modern-nav-link {{ $onPropertyList && $activeType === 'flat' ? 'active' : '' }}" href="{{ route('front.properties', ['type' => 'flat']) }}">
                             Flats
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link modern-nav-link {{ $onPropertyList && $activeType === 'agriculture' ? 'active' : '' }}" href="{{ route('front.properties', ['type' => 'agriculture']) }}">
-                            Agri Land
+                     <li class="nav-item">
+                        <a class="nav-link modern-nav-link {{ $onPropertyList && $activeType === 'plot' ? 'active' : '' }}" href="{{ route('front.properties', ['type' => 'plot']) }}">
+                            Plots
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle modern-nav-link {{ $nriActive ? 'active' : '' }}" href="#" id="nriDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            NRI Property
+                    <li class="nav-item">
+                        <a class="nav-link modern-nav-link {{ $onPropertyList && $activeType === 'agriculture' ? 'active' : '' }}" href="{{ route('front.properties', ['type' => 'agriculture']) }}">
+                            Agri Lands
                         </a>
-                        <ul class="dropdown-menu modern-dropdown" aria-labelledby="nriDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Chennai']) }}">Chennai</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Coimbatore']) }}">Coimbatore</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Trichy']) }}">Trichy</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Madurai']) }}">Madurai</a>
-                            </li>
-                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link modern-nav-link {{ request()->routeIs('front.nri-property') ? 'active' : '' }}" href="{{ route('front.nri-property') }}">
+                            NRI Prop Mgnt
+                        </a>
+                    </li>
+                    <!--login-->
+                    <li class="nav-item">
+                        <a class="nav-link modern-nav-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">
+                            Login
+                        </a>
                     </li>
                 </ul>
 
@@ -319,8 +312,6 @@
                     <i class="bi bi-whatsapp"></i>
                     <span>944 500 2020</span>
                 </a>
-
-
             </div>
         </div>
     </div>

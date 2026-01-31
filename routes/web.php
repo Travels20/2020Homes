@@ -13,6 +13,8 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('/properties', [PageController::class, 'properties'])->name('front.properties');
 Route::get('/about', [PageController::class, 'about'])->name('front.about');
 Route::get('/contact', [PageController::class, 'contact'])->name('front.contact');
+Route::get('/nri-property', [PageController::class, 'nriProperty'])->name('front.nri-property');
+Route::post('/nri-property/submit', [PageController::class, 'submitNriForm'])->name('nri.submit');
 Route::get('/property/{slug}', [PageController::class, 'show'])->name('property.show');
 Route::post('/appointment', [PageController::class, 'storeAppointment'])->name('appointment.store');
 

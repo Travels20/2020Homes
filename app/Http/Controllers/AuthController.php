@@ -72,7 +72,7 @@ class AuthController extends Controller
         $apiUrl = 'https://rest.qikberry.ai/v1/sms/messages';
         $apiKey = '5c3876075d901cd1468c03949153b358';
         $message = "Dear {$userName}, Welcome! Your 2020Homes OTP is {$otp}. Valid for 10 mins.";
-        
+
         try {
             $response = Http::withHeaders(['Authorization' => "Bearer $apiKey"])
                 ->withoutVerifying()
@@ -180,13 +180,13 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
-            'role' => 'user', 
+            'role' => 'user',
             'status' => 'active',
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('/');
     }
 
     public function logout(Request $request)

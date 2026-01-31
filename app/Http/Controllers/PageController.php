@@ -60,6 +60,71 @@ class PageController extends Controller
         return view('contact');
     }
 
+    public function nriProperty()
+    {
+        return view('nri-property');
+    }
+
+    public function submitNriForm(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string|max:20',
+                'form_type' => 'required|in:selling,maintenance',
+                'property_type' => 'nullable|string|max:100',
+                'property_location' => 'nullable|string|max:255',
+                'message' => 'nullable|string|max:1000',
+            ]);
+
+            // Create or find user
+            $user = null;
+            if (Auth::check()) {
+                $user = Auth::user();
+            } else {
+                $user = \App\Models\User::updateOrCreate(
+                    ['email' => $validated['email']],
+                    [
+                        'name' => $validated['name'],
+                        'phone' => $validated['phone'],
+                        'password' => \Illuminate\Support\Str::random(16),
+                        'role' => 'user',
+                    ]
+                );
+            }
+
+            $createData = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'message' => "Form Type: {$validated['form_type']}\n" .
+                            "Property Type: {$validated['property_type']}\n" .
+                            "Location: {$validated['property_location']}\n" .
+                            "Details: {$validated['message']}",
+                'source' => 'nri_form_' . $validated['form_type'],
+                'status' => 1,
+            ];
+
+            if (\Illuminate\Support\Facades\Schema::hasColumn('enquiries', 'user_id')) {
+                $createData['user_id'] = $user->id;
+            }
+
+            $enquiry = Enquiry::create($createData);
+
+            // Send notification email
+            $adminEmail = config('mail.from.address') ?? 'info@2020homes.com';
+            Mail::to($adminEmail)->queue(new EnquiryNotificationMail($enquiry));
+
+        } catch (\Exception $e) {
+            \Log::error('NRI Form submission failed: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Unable to submit your request. Please try again later.');
+        }
+
+        $formType = $request->form_type === 'selling' ? 'Selling' : 'Maintenance';
+        return redirect()->back()->with('success', "Your {$formType} Property request has been submitted successfully! We will contact you soon.");
+    }
+
     public function properties(Request $request)
     {
         $rawType = strtolower((string) $request->query('type', ''));

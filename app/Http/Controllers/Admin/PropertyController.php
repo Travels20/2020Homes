@@ -78,11 +78,14 @@ class PropertyController extends Controller
             'city' => 'required|string',
             'city_area' => 'nullable|string',
             'description' => 'required|string',
+             'other_content' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'nearby_places' => 'nullable|array',
-            'nearby_places.*.label' => 'nullable|string|max:255',
-            'nearby_places.*.distance' => 'nullable|string|max:255',
+            'nearby_places.*.category' => 'nullable|string|max:255',
+            'nearby_places.*.name' => 'nullable|string|max:255',
+            'nearby_places.*.travel_time' => 'nullable|string|max:255',
+
             'faqs' => 'nullable|array',
             'faqs.*.question' => 'nullable|string',
             'faqs.*.answer' => 'nullable|string',
@@ -97,12 +100,16 @@ class PropertyController extends Controller
         $isAdmin = $this->isAdminOrSuperAdmin();
 
         // Create property first
-        $slug = Str::slug($request->title) . '-' . time();
+        $slug = Str::slug($request->title);
 
+        // $nearbyPlaces = $request->input('nearby_places', []);
+        // $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
+        //     return !empty($item['label']) || !empty($item['distance']);
+        // }));
+        // Clean nearby places
         $nearbyPlaces = $request->input('nearby_places', []);
-        // Clean out completely empty rows and preserve structure for JSON storage
         $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
-            return !empty($item['label']) || !empty($item['distance']);
+            return !empty($item['category']) || !empty($item['name']) || !empty($item['travel_time']);
         }));
 
         $faqs = $request->input('faqs', []);
@@ -118,6 +125,7 @@ class PropertyController extends Controller
             'title' => $validated['title'],
             'slug' => $slug,
             'description' => $validated['description'],
+            'other_content' => $request->input('other_content'),
             'property_type' => $validated['property_type'],
             'listing_type' => $validated['listing_type'],
             'city' => $validated['city'],
@@ -127,8 +135,10 @@ class PropertyController extends Controller
             'area' => $validated['area'],
             'area_unit' => $request->input('area_unit', 'sq_ft'),
             'address' => $request->input('address'),
+            'other_content' => $request->input('other_content'),
             'latitude' => $request->input('latitude'),
             'longitude' => $request->input('longitude'),
+
             'nearby_places' => !empty($nearbyPlaces) ? $nearbyPlaces : null,
             'faqs' => !empty($faqs) ? $faqs : null,
             'status' => $validated['status'] ?? 'draft',
@@ -141,7 +151,7 @@ class PropertyController extends Controller
 
         // Handle Feature Image Upload to S3
         if ($request->hasFile('feature_image')) {
-            $filename = time() . '_' . Str::slug($property->title) . '.' . $request->file('feature_image')->getClientOriginalExtension();
+            $filename = Str::slug($property->title) . '.' . $request->file('feature_image')->getClientOriginalExtension();
             $path = $request->file('feature_image')
                 ->storeAs("2020Homes/{$validated['city']}/feature_images", $filename, 's3');
 
@@ -152,7 +162,7 @@ class PropertyController extends Controller
 
         // Handle Banner Image Upload to S3
         if ($request->hasFile('banner_image')) {
-            $filename = time() . '_banner_' . Str::slug($property->title) . '.' . $request->file('banner_image')->getClientOriginalExtension();
+            $filename = Str::slug($property->title) . '.' . $request->file('banner_image')->getClientOriginalExtension();
             $path = $request->file('banner_image')
                 ->storeAs("2020Homes/{$validated['city']}/banner_images", $filename, 's3');
 
@@ -164,7 +174,7 @@ class PropertyController extends Controller
         // Handle Gallery Images Upload to S3
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                $filename = time() . '_gallery_' . Str::slug($property->title) . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $filename = Str::slug($property->title) . '_' . $index . '.' . $image->getClientOriginalExtension();
                 $path = $image->storeAs("2020Homes/{$validated['city']}/gallery_images", $filename, 's3');
 
                 Storage::disk('s3')->setVisibility($path, 'public');
@@ -222,11 +232,13 @@ class PropertyController extends Controller
             'city_area' => 'required|string',
             // 'state' => 'required|string',
             'description' => 'required|string',
+            'other_content' => 'nullable|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'nearby_places' => 'nullable|array',
-            'nearby_places.*.label' => 'nullable|string|max:255',
-            'nearby_places.*.distance' => 'nullable|string|max:255',
+            'nearby_places.*.category' => 'nullable|string|max:255',
+            'nearby_places.*.name' => 'nullable|string|max:255',
+            'nearby_places.*.travel_time' => 'nullable|string|max:255',
             'faqs' => 'nullable|array',
             'faqs.*.question' => 'nullable|string',
             'faqs.*.answer' => 'nullable|string',
@@ -240,9 +252,14 @@ class PropertyController extends Controller
 
         $isAdmin = $this->isAdminOrSuperAdmin();
 
+        // $nearbyPlaces = $request->input('nearby_places', []);
+        // $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
+        //     return !empty($item['label']) || !empty($item['distance']);
+        // }));
+        // Clean nearby places
         $nearbyPlaces = $request->input('nearby_places', []);
         $nearbyPlaces = array_values(array_filter($nearbyPlaces, function ($item) {
-            return !empty($item['label']) || !empty($item['distance']);
+            return !empty($item['category']) || !empty($item['name']) || !empty($item['travel_time']);
         }));
 
         $faqs = $request->input('faqs', []);
@@ -254,6 +271,7 @@ class PropertyController extends Controller
         $updateData = [
             'title' => $validated['title'],
             'description' => $validated['description'],
+             'other_content' => $request->input('other_content'),
             'property_type' => $validated['property_type'],
             'listing_type' => $validated['listing_type'],
             'city' => $validated['city'],
@@ -291,7 +309,7 @@ class PropertyController extends Controller
                 Storage::disk('s3')->delete($property->feature_image);
             }
 
-            $filename = time() . '_' . Str::slug($validated['title']) . '.' . $request->file('feature_image')->getClientOriginalExtension();
+            $filename = Str::slug($validated['title']) . '.' . $request->file('feature_image')->getClientOriginalExtension();
             $path = $request->file('feature_image')
                 ->storeAs("2020Homes/{$validated['city']}/feature_images", $filename, 's3');
 
@@ -307,7 +325,7 @@ class PropertyController extends Controller
                 Storage::disk('s3')->delete($property->banner_image);
             }
 
-            $filename = time() . '_banner_' . Str::slug($validated['title']) . '.' . $request->file('banner_image')->getClientOriginalExtension();
+            $filename = Str::slug($validated['title']) . '.' . $request->file('banner_image')->getClientOriginalExtension();
             $path = $request->file('banner_image')
                 ->storeAs("2020Homes/{$validated['city']}/banner_images", $filename, 's3');
 
@@ -321,7 +339,7 @@ class PropertyController extends Controller
             $lastSortOrder = $property->images()->max('sort_order') ?? -1;
 
             foreach ($request->file('images') as $index => $image) {
-                $filename = time() . '_gallery_' . Str::slug($validated['title']) . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $filename = Str::slug($validated['title']) . '_' . $index . '.' . $image->getClientOriginalExtension();
                 $path = $image->storeAs("2020Homes/{$validated['city']}/gallery_images", $filename, 's3');
 
                 Storage::disk('s3')->setVisibility($path, 'public');

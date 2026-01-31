@@ -15,6 +15,7 @@ class Property extends Model
         'title',
         'slug',
         'description',
+        'other_content',
         'property_type',
         'listing_type',
         'feature_image',

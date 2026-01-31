@@ -17,13 +17,15 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->longText('other_content')->nullable();
             $table->string('property_type'); // distinct: plot, flat, agriculture
             $table->string('listing_type')->default('sale'); // sale, rent
 
             // Location
             $table->string('address')->nullable();
             $table->string('city');
-            $table->string('state');
+            $table->string('city_area')->nullable();
+            // $table->string('state');
             $table->string('pincode')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();

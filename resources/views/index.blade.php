@@ -142,6 +142,21 @@
                 </a>
             </div>
         </div>
+
+        <div class="social-sidebar-vertical d-none d-lg-flex flex-column gap-3 py-4 px-3 align-items-center rounded-start position-absolute top-50 end-0 translate-middle-y z-3 shadow">
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Twitter">
+                <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="#" class="text-white fs-5 text-decoration-none hover-scale" aria-label="YouTube">
+                <i class="bi bi-youtube"></i>
+            </a>
+        </div>
     </section>
 
 
@@ -166,11 +181,10 @@
 
         </div>
 
-        <div class="row g-4">
+        {{-- <div class="row g-4">
             @foreach($featuredProperties as $property)
             <div class="col-lg-4 col-md-6">
-                <div class="property-card card h-100 border-0 shadow-sm overflow-hidden">
-                    <!-- Property Image -->
+                <div class="property-card card h-100 border-0 shadow-sm overflow-hidden" onclick="window.location='{{ route('property.show', $property->slug) }}'" style="cursor: pointer;">
                     <div class="position-relative property-image-wrapper">
                         @php
                             $imgSrc = $property->feature_image_url;
@@ -181,16 +195,13 @@
                              alt="{{ $property->title }}"
                              onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
 
-                        <!-- Status Badge - Top Right -->
-                        <div class="position-absolute top-0 end-0">
+                          <div class="position-absolute top-0 end-0">
                             <div class="status-badge bg-danger text-white px-3 py-2 fw-bold">
                                 {{ strtoupper($property->listing_type) }}
-                                {{-- {{ $property->status ?? 'Available' }} --}}
-                            </div>
+                                </div>
                         </div>
 
-                        <!-- Location Badge - Bottom Left -->
-                        <div class="position-absolute bottom-0 start-0 m-3">
+                         <div class="position-absolute bottom-0 start-0 m-3">
                             <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold d-flex align-items-center gap-2">
                                 <i class="bi bi-geo-alt-fill"></i>
                                 <span>{{ $property->city }}</span>
@@ -198,17 +209,13 @@
                         </div>
                     </div>
 
-                    <!-- Card Body -->
-                    <div class="card-body p-3">
-                        <!-- Title -->
+                      <div class="card-body p-3">
                         <h5 class="card-title fw-bold mb-2 text-truncate" style="font-size: 1.1rem;">
                             {{ $property->title }}
                         </h5>
 
-                        <!-- Property Details Grid -->
                         <div class="row g-2 mb-3">
-                            <!-- Area -->
-                            <div class="col-6">
+                           <div class="col-6">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-arrows-angle-expand text-secondary"></i>
                                     <div>
@@ -219,8 +226,7 @@
                             </div>
 
                             @if($property->property_type == 'flat')
-                                <!-- Bedrooms -->
-                                <div class="col-6">
+                               <div class="col-6">
                                     <div class="d-flex align-items-center gap-2">
                                         <i class="bi bi-door-closed text-secondary"></i>
                                         <div>
@@ -230,8 +236,7 @@
                                     </div>
                                 </div>
                             @else
-                                <!-- Property Type -->
-                                <div class="col-6">
+                                 <div class="col-6">
                                     <div class="d-flex align-items-center gap-2">
                                         <i class="bi bi-building text-secondary"></i>
                                         <div>
@@ -242,8 +247,7 @@
                                 </div>
                             @endif
 
-                            <!-- Price -->
-                            <div class="col-6">
+                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-currency-rupee text-secondary"></i>
                                     <div>
@@ -253,8 +257,7 @@
                                 </div>
                             </div>
 
-                            <!-- Status/Availability -->
-                            <div class="col-6">
+                              <div class="col-6">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-check-circle text-secondary"></i>
                                     <div>
@@ -265,8 +268,7 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="row g-2">
+                         <div class="row g-2">
                             <div class="col-6">
                                 <button class="btn btn-outline-danger w-100 btn-sm fw-bold rounded-pill">
                                     {{ ucfirst($property->property_type) }}
@@ -282,15 +284,14 @@
                 </div>
             </div>
             @endforeach
-        </div>
+        </div> --}}
 
-        <!-- View All Button -->
-        <div class="text-center mt-5">
+          {{-- <div class="text-center mt-5">
             <a href="{{ route('front.properties') }}" class="btn btn-lg btn-danger px-5 rounded-pill fw-bold">
                 View All Properties
                 <i class="bi bi-arrow-right ms-2"></i>
             </a>
-        </div>
+        </div> --}}
     </div>
 </section>
 @endif
@@ -329,10 +330,10 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
-                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
-                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                    <h4 class="text-danger fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-danger w-100 fw-bold">View Details</a>
                                 </div>
                             </div>
                         </div>
@@ -375,10 +376,10 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
-                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
-                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                    <h4 class="text-danger fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-danger w-100 fw-bold">View Details</a>
                                 </div>
                             </div>
                         </div>
@@ -421,10 +422,10 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
-                                    <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
-                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
+                                    <h4 class="text-danger fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
+                                    <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-danger w-100 fw-bold">View Details</a>
                                 </div>
                             </div>
                         </div>

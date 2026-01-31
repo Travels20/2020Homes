@@ -44,6 +44,8 @@
 </head>
 <body class="font-sans antialiased bg-light">
 
+    <!-- Top Header -->
+    @include('layouts.partials.top-header')
         <!-- Header -->
     @include('layouts.partials.header')
 

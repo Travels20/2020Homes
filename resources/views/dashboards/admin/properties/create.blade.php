@@ -78,7 +78,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
+                        <textarea name="description" id="description" class="form-control" rows="6" required>{{ old('description') }}</textarea>
                     </div>
 
                     <h5 class="fw-bold text-primary mb-3 mt-4">Location Details</h5>
@@ -361,6 +361,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 @endpush
 
 <script>
@@ -618,6 +619,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
+    }
+
+    // CKEditor 5 Initialization
+    if (document.getElementById('description') && typeof ClassicEditor !== 'undefined') {
+        ClassicEditor
+            .create(document.getElementById('description'), {
+                toolbar: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'link', 'bulletedList', 'numberedList', '|',
+                    'blockQuote', 'undo', 'redo'
+                ],
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                    ]
+                }
+            })
+            .then(editor => {
+                console.log('CKEditor 5 initialized successfully');
+            })
+            .catch(error => {
+                console.error('CKEditor 5 initialization error:', error);
+            });
     }
 });
 </script>

@@ -79,7 +79,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="4" required>{{ old('description', $property->description) }}</textarea>
+                        <textarea name="description" class="form-control" rows="4" >{{ old('description', $property->description) }}</textarea>
                     </div>
 
                     <h5 class="fw-bold text-primary mb-3 mt-4">Location Details</h5>
@@ -124,6 +124,55 @@
                     </div>
 
                     @php
+    $oldNearby = old('nearby_places', $property->nearby_places ?? []);
+
+    if (is_string($oldNearby)) {
+        try {
+            $oldNearby = json_decode($oldNearby, true) ?? [];
+        } catch (\Exception $e) {
+            $oldNearby = [['category' => 'Hospital', 'name' => '', 'travel_time' => '']];
+        }
+    }
+
+    if (!is_array($oldNearby) || empty($oldNearby)) {
+        $oldNearby = [['category' => 'Hospital', 'name' => '', 'travel_time' => '']];
+    }
+
+    $nearbyRows = $oldNearby;
+    $nearbyCategories = ['Hospital','College','Bus Stand','Airport','Railway Station','Other'];
+@endphp
+<div class="mb-3">
+    <label class="form-label d-flex justify-content-between align-items-center">
+        <span>Nearby famous places (category, place name, travel time/distance)</span>
+        <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-nearby">Add place</button>
+    </label>
+    <div id="nearby-places-wrapper" class="d-flex flex-column gap-2">
+        @foreach($nearbyRows as $index => $row)
+            <div class="row g-2 align-items-center nearby-place-row" data-index="{{ $index }}">
+                <div class="col-md-4">
+                    <select name="nearby_places[{{ $index }}][category]" class="form-select">
+                        @foreach($nearbyCategories as $cat)
+                            <option value="{{ $cat }}" {{ (isset($row['category']) && $row['category'] == $cat) ? 'selected' : '' }}>{{ $cat }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="nearby_places[{{ $index }}][name]"
+                           value="{{ $row['name'] ?? '' }}" placeholder="e.g. ABC Hospital">
+                </div>
+                <div class="col-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control me-2" name="nearby_places[{{ $index }}][travel_time]"
+                           value="{{ $row['travel_time'] ?? '' }}" placeholder="e.g. 10 min or 2.3 km">
+                    <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+                    {{-- @php
                         $oldNearby = old('nearby_places', $property->nearby_places ?? []);
 
                         // Ensure it's an array
@@ -165,7 +214,7 @@
                                 </div>
                             @endforeach
                         </div>
-                    </div>
+                    </div> --}}
 
                     @php
                         $oldFaqs = old('faqs', $property->faqs ?? []);
@@ -215,8 +264,20 @@
                     <div class="row mb-3">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Price (₹)</label>
-                            <input type="number" name="price" class="form-control" value="{{ old('price', $property->price) }}" required step="0.01">
+                            <div class="price-container">
+                                <input type="number" name="price" id="priceValue" class="form-control"
+                                    value="{{ old('price', $property->price) }}" required step="0.01" placeholder="Enter price">
+                                <select id="priceUnit" class="form-select">
+                                    <option value="Lakhs">Lakhs</option>
+                                    <option value="Crores">Crores</option>
+                                </select>
+                            </div>
+                            <p id="output" class="mt-2 text-primary fw-bold"></p>
                         </div>
+                        {{-- <div class="col-md-4 mb-3">
+                            <label class="form-label">Price (₹)</label>
+                            <input type="number" name="price" class="form-control" value="{{ old('price', $property->price) }}" required step="0.01">
+                        </div> --}}
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Area Size</label>
                             <input type="number" name="area" class="form-control" value="{{ old('area', $property->area) }}" required step="0.01">
@@ -250,6 +311,14 @@
                                     <option value="1" {{ old('furnished', $property->furnished) == '1' ? 'selected' : '' }}>Yes</option>
                                 </select>
                             </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-primary mb-3 mt-4">Other Content</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Additional Information</label>
+                            <textarea name="other_content" id="other_content" class="form-control" rows="4">{{ old('other_content', $property->other_content) }}</textarea>
                         </div>
                     </div>
 
@@ -359,12 +428,39 @@
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""/>
+
+      <style>
+.price-container {
+    display: flex;
+    gap: 8px;
+}
+
+#priceValue {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#priceUnit {
+    width: 120px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#output {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+</style>
+
 @endpush
 
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 @endpush
 
 <script>
@@ -440,62 +536,110 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Nearby places repeater
-    const nearbyWrapper = document.getElementById('nearby-places-wrapper');
-    const btnAddNearby = document.getElementById('btn-add-nearby');
+    // const nearbyWrapper = document.getElementById('nearby-places-wrapper');
+    // const btnAddNearby = document.getElementById('btn-add-nearby');
 
-    if (nearbyWrapper && btnAddNearby) {
-        function refreshIndexes() {
-            const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
-            rows.forEach((row, index) => {
-                row.dataset.index = index;
-                const labelInput = row.querySelector('input[name*="[label]"]');
-                const distanceInput = row.querySelector('input[name*="[distance]"]');
-                if (labelInput) {
-                    labelInput.name = `nearby_places[${index}][label]`;
-                }
-                if (distanceInput) {
-                    distanceInput.name = `nearby_places[${index}][distance]`;
-                }
-            });
+    // if (nearbyWrapper && btnAddNearby) {
+    //     function refreshIndexes() {
+    //         const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
+    //         rows.forEach((row, index) => {
+    //             row.dataset.index = index;
+    //             const labelInput = row.querySelector('input[name*="[label]"]');
+    //             const distanceInput = row.querySelector('input[name*="[distance]"]');
+    //             if (labelInput) {
+    //                 labelInput.name = `nearby_places[${index}][label]`;
+    //             }
+    //             if (distanceInput) {
+    //                 distanceInput.name = `nearby_places[${index}][distance]`;
+    //             }
+    //         });
+    //     }
+
+    //     btnAddNearby.addEventListener('click', function () {
+    //         const index = nearbyWrapper.querySelectorAll('.nearby-place-row').length;
+    //         const row = document.createElement('div');
+    //         row.className = 'row g-2 align-items-center nearby-place-row';
+    //         row.innerHTML = `
+    //             <div class="col-md-6">
+    //                 <input type="text" class="form-control" name="nearby_places[${index}][label]" placeholder="e.g. ABC Hospital">
+    //             </div>
+    //             <div class="col-md-4">
+    //                 <input type="text" class="form-control" name="nearby_places[${index}][distance]" placeholder="e.g. 1.2 km">
+    //             </div>
+    //             <div class="col-md-2 d-flex justify-content-end">
+    //                 <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
+    //                     <i class="bi bi-x"></i>
+    //                 </button>
+    //             </div>
+    //         `;
+    //         nearbyWrapper.appendChild(row);
+    //         refreshIndexes();
+    //     });
+
+    //     nearbyWrapper.addEventListener('click', function (e) {
+    //         if (e.target.closest('.btn-remove-nearby')) {
+    //             const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
+    //             if (rows.length === 1) {
+    //                 // Just clear values on last row instead of removing
+    //                 rows[0].querySelectorAll('input').forEach(input => input.value = '');
+    //             } else {
+    //                 e.target.closest('.nearby-place-row').remove();
+    //                 refreshIndexes();
+    //             }
+    //         }
+    //     });
+
+    //     refreshIndexes();
+    // }
+
+
+    btnAddNearby.addEventListener('click', function () {
+    const index = nearbyWrapper.querySelectorAll('.nearby-place-row').length;
+    const row = document.createElement('div');
+    row.className = 'row g-2 align-items-center nearby-place-row';
+    row.innerHTML = `
+        <div class="col-md-4">
+            <select name="nearby_places[${index}][category]" class="form-select">
+                <option>Hospital</option>
+                <option>College</option>
+                <option>Bus Stand</option>
+                <option>Airport</option>
+                <option>Railway Station</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="nearby_places[${index}][name]" placeholder="e.g. ABC Hospital">
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+            <input type="text" class="form-control me-2" name="nearby_places[${index}][travel_time]" placeholder="e.g. 10 min or 2.3 km">
+            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+    `;
+    nearbyWrapper.appendChild(row);
+    refreshIndexes();
+});
+
+function refreshIndexes() {
+    const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
+    rows.forEach((row, index) => {
+        row.dataset.index = index;
+        const categorySelect = row.querySelector('select[name*="[category]"]');
+        const nameInput = row.querySelector('input[name*="[name]"]');
+        const travelInput = row.querySelector('input[name*="[travel_time]"]');
+        if (categorySelect) {
+            categorySelect.name = `nearby_places[${index}][category]`;
         }
-
-        btnAddNearby.addEventListener('click', function () {
-            const index = nearbyWrapper.querySelectorAll('.nearby-place-row').length;
-            const row = document.createElement('div');
-            row.className = 'row g-2 align-items-center nearby-place-row';
-            row.innerHTML = `
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="nearby_places[${index}][label]" placeholder="e.g. ABC Hospital">
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="nearby_places[${index}][distance]" placeholder="e.g. 1.2 km">
-                </div>
-                <div class="col-md-2 d-flex justify-content-end">
-                    <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
-                        <i class="bi bi-x"></i>
-                    </button>
-                </div>
-            `;
-            nearbyWrapper.appendChild(row);
-            refreshIndexes();
-        });
-
-        nearbyWrapper.addEventListener('click', function (e) {
-            if (e.target.closest('.btn-remove-nearby')) {
-                const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
-                if (rows.length === 1) {
-                    // Just clear values on last row instead of removing
-                    rows[0].querySelectorAll('input').forEach(input => input.value = '');
-                } else {
-                    e.target.closest('.nearby-place-row').remove();
-                    refreshIndexes();
-                }
-            }
-        });
-
-        refreshIndexes();
-    }
-
+        if (nameInput) {
+            nameInput.name = `nearby_places[${index}][name]`;
+        }
+        if (travelInput) {
+            travelInput.name = `nearby_places[${index}][travel_time]`;
+        }
+    });
+}
     // FAQ repeater
     const faqsWrapper = document.getElementById('faqs-wrapper');
     const btnAddFaq = document.getElementById('btn-add-faq');
@@ -600,6 +744,72 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    // CKEditor 5 Initialization for Description
+if (document.getElementById('description') && typeof ClassicEditor !== 'undefined') {
+    ClassicEditor
+        .create(document.getElementById('description'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'underline', 'strikethrough', '|',
+                'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                'alignment:left', 'alignment:center', 'alignment:right', 'alignment:justify', '|',
+                'bulletedList', 'numberedList', '|',
+                'link', 'blockQuote', 'insertTable', '|',
+                'undo', 'redo'
+            ]
+        })
+        .then(editor => {
+            console.log('Description CKEditor initialized');
+            window.descriptionEditor = editor;
+        })
+        .catch(error => {
+            console.error('CKEditor error:', error);
+        });
+}
+
+// CKEditor 5 Initialization for Other Content
+if (document.getElementById('other_content') && typeof ClassicEditor !== 'undefined') {
+    ClassicEditor
+        .create(document.getElementById('other_content'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'underline', 'strikethrough', '|',
+                'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                'alignment:left', 'alignment:center', 'alignment:right', 'alignment:justify', '|',
+                'bulletedList', 'numberedList', '|',
+                'link', 'blockQuote', 'insertTable', '|',
+                'undo', 'redo'
+            ]
+        })
+        .then(editor => {
+            console.log('Other Content CKEditor initialized');
+            window.otherContentEditor = editor;
+        })
+        .catch(error => {
+            console.error('CKEditor error:', error);
+        });
+}
+
+// Price display functionality (same as create)
+const priceValue = document.getElementById("priceValue");
+const priceUnit = document.getElementById("priceUnit");
+const output = document.getElementById("output");
+
+function updateOutput() {
+    if (priceValue.value) {
+        output.textContent = "₹ " + priceValue.value + " " + priceUnit.value;
+    } else {
+        output.textContent = "";
+    }
+}
+
+if (priceValue && priceUnit && output) {
+    priceValue.addEventListener("input", updateOutput);
+    priceUnit.addEventListener("change", updateOutput);
+    updateOutput(); // Initialize on load
+}
+
 });
 </script>
 @endsection
