@@ -3,33 +3,20 @@
 @section('title', 'Site Settings')
 
 @section('sidebar-menu')
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.dashboard') }}" class="sidebar-nav-link">
-            <i class="bi bi-speedometer2 sidebar-nav-icon"></i>
-            <span>Dashboard</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.index') }}" class="sidebar-nav-link">
-            <i class="bi bi-building sidebar-nav-icon"></i>
-            <span>Properties</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.create') }}" class="sidebar-nav-link">
-            <i class="bi bi-plus-circle sidebar-nav-icon"></i>
-            <span>Add Property</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.settings.index') }}" class="sidebar-nav-link active">
-            <i class="bi bi-gear sidebar-nav-icon"></i>
-            <span>Site Settings</span>
-        </a>
-    </li>
+    <x-admin-sidebar-menu />
 @endsection
 
 @section('content')
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-light ps-3 py-2 rounded">
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Site Settings</li>
+    </ol>
+</nav>
+
 <div class="row mb-4">
     <div class="col-md-12">
         <h2 class="fw-bold">Site Settings</h2>
@@ -69,7 +56,11 @@
                         <label class="form-label">Upload Banners (Multiple)</label>
                         <input type="file" name="banners[]" id="banners_input" class="form-control" multiple accept="image/*">
                         <div id="banners_preview" class="mt-3 d-flex flex-wrap gap-2">
-                            @if(isset($settings['banners']))
+                            @if(isset($settings['banners']) && is_array($settings['banners']))
+                                @foreach($settings['banners'] as $banner)
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($banner) }}" class="img-thumbnail" style="height: 100px; width: 150px; object-fit: cover;">
+                                @endforeach
+                            @elseif(isset($settings['banners']) && is_string($settings['banners']))
                                 @foreach(json_decode($settings['banners']) as $banner)
                                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($banner) }}" class="img-thumbnail" style="height: 100px; width: 150px; object-fit: cover;">
                                 @endforeach
@@ -84,8 +75,24 @@
                             <input type="text" name="site_name" class="form-control" value="{{ $settings['site_name'] ?? '2020Homes' }}">
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label">Site Tagline</label>
+                            <input type="text" name="site_tagline" class="form-control" value="{{ $settings['site_tagline'] ?? '' }}" placeholder="Short site tagline or slogan">
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Contact Email</label>
                             <input type="email" name="contact_email" class="form-control" value="{{ $settings['contact_email'] ?? 'info@2020homes.com' }}">
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3 mt-4">SEO Settings</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">SEO Title</label>
+                            <input type="text" name="seo_title" class="form-control" value="{{ $settings['seo_title'] ?? '' }}" placeholder="Default title for homepage and social shares">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">SEO Description</label>
+                            <textarea name="seo_content" class="form-control" rows="4" placeholder="Short description used for meta description and social shares">{{ $settings['seo_content'] ?? '' }}</textarea>
                         </div>
                     </div>
 

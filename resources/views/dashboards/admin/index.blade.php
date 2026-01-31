@@ -1,33 +1,10 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Admin Dashboard')
-@section('page-title', 'Overview')
+{{-- @section('page-title', 'Overviews') --}}
 
 @section('sidebar-menu')
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.dashboard') }}" class="sidebar-nav-link active">
-            <i class="bi bi-speedometer2 sidebar-nav-icon"></i>
-            <span>Dashboard</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.index') }}" class="sidebar-nav-link">
-            <i class="bi bi-building sidebar-nav-icon"></i>
-            <span>Properties</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.create') }}" class="sidebar-nav-link">
-            <i class="bi bi-plus-circle sidebar-nav-icon"></i>
-            <span>Add Property</span>
-        </a>
-    </li>
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.settings.index') }}" class="sidebar-nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}">
-            <i class="bi bi-gear sidebar-nav-icon"></i>
-            <span>Site Settings</span>
-        </a>
-    </li>
+    <x-admin-sidebar-menu />
 @endsection
 
 @section('content')
@@ -42,7 +19,7 @@
     <div class="row g-4 mb-4">
         <!-- Total Properties -->
         <div class="col-md-3">
-            <div class="card bg-animated-gradient-1 border-0 h-100 shadow-sm">
+            <div class="card bg-animated-gradient-1 success-gradient border-0 h-100 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
@@ -201,18 +178,114 @@
         </div>
     </div>
 
-    <!-- Quick Stats/Graph Placeholder -->
-    <div class="row g-4 mt-1">
-        <div class="col-md-12">
-             <div class="card glass-card border-0 p-4">
-                <h5 class="fw-bold mb-3">System Status</h5>
-                <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+    <!-- Enquiries and Users Section -->
+    <div class="row g-4 mt-2">
+        <!-- Recent Enquiries -->
+        <div class="col-lg-6">
+            <div class="card glass-card border-0 h-100">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center py-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-chat-dots text-info me-2"></i>Recent Enquiries
+                    </h5>
+                    <a href="#" class="btn btn-sm btn-light text-info fw-bold">View All</a>
                 </div>
-                <p class="text-secondary mt-2 small">Server load normal. Database connection stable.</p>
-             </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($enquiries ?? [] as $enquiry)
+                                <tr>
+                                    <td class="ps-4">
+                                        <h6 class="mb-0 fw-bold">{{ $enquiry->name }}</h6>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:{{ $enquiry->email }}" class="text-decoration-none small">{{ $enquiry->email }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="tel:{{ $enquiry->phone }}" class="text-decoration-none fw-bold">{{ $enquiry->phone }}</a>
+                                    </td>
+                                    <td>
+                                        <small class="text-secondary">{{ $enquiry->created_at->format('d M Y') }}</small>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-secondary">No enquiries found</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Users List -->
+        <div class="col-lg-6">
+            <div class="card glass-card border-0 h-100">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center py-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-people text-success me-2"></i>All Users
+                    </h5>
+                    <span class="badge bg-info text-white">{{ count($users) }}</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($users as $user)
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm bg-gradient-primary text-white me-2">
+                                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                            </div>
+                                            <h6 class="mb-0 fw-bold">{{ $user->name }}</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small class="text-secondary">{{ $user->email }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-secondary rounded-pill border text-capitalize">{{ $user->role }}</span>
+                                    </td>
+                                    <td>
+                                        @if($user->status == 'active')
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                                        @else
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Inactive</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-secondary">No users found</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 @endsection
 
 

@@ -2,51 +2,22 @@
 @section('title', 'Add Property')
 
 @section('sidebar-menu')
-    @php
-        $isAdmin = in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true);
-    @endphp
-
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.dashboard') }}" class="sidebar-nav-link">
-            <i class="bi bi-speedometer2 sidebar-nav-icon"></i>
-            <span>Dashboard</span>
-        </a>
-    </li>
-
-    @if($isAdmin)
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.properties.index') }}" class="sidebar-nav-link">
-                <i class="bi bi-building sidebar-nav-icon"></i>
-                <span>Properties</span>
-            </a>
-        </li>
-    @else
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.my-properties') }}" class="sidebar-nav-link">
-                <i class="bi bi-building sidebar-nav-icon"></i>
-                <span>My Properties</span>
-            </a>
-        </li>
-    @endif
-
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.create') }}" class="sidebar-nav-link active">
-            <i class="bi bi-plus-circle sidebar-nav-icon"></i>
-            <span>Add Property</span>
-        </a>
-    </li>
-
-    @if($isAdmin)
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.settings.index') }}" class="sidebar-nav-link">
-                <i class="bi bi-gear sidebar-nav-icon"></i>
-                <span>Site Settings</span>
-            </a>
-        </li>
-    @endif
+    <x-admin-sidebar-menu />
 @endsection
 
 @section('content')
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-light ps-3 py-2 rounded">
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true) ? route('admin.properties.index') : route('admin.my-properties') }}" class="text-decoration-none">{{ in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true) ? 'All Properties' : 'My Properties' }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Add Property</li>
+    </ol>
+</nav>
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
@@ -114,11 +85,11 @@
                     <div class="row mb-3">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">District / City</label>
-                            <input type="text" name="state" class="form-control" value="{{ old('state') }}" required>
+                            <input type="text" name="city" class="form-control" value="{{ old('city') }}" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">City  / Area</label>
-                            <input type="text" name="city" class="form-control" value="{{ old('city') }}" required>
+                            <input type="text" name="city_area" class="form-control" value="{{ old('city_area') }}" required>
                         </div>
 
                         <div class="col-md-4 mb-3">
@@ -149,25 +120,33 @@
 
                     @php
                         $oldNearby = old('nearby_places');
-                        $nearbyRows = is_array($oldNearby) && count($oldNearby) ? $oldNearby : [['label' => '', 'distance' => '']];
+                        $nearbyRows = is_array($oldNearby) && count($oldNearby)
+                            ? $oldNearby
+                            : [[ 'category' => 'Hospital', 'name' => '', 'travel_time' => '' ]];
+                        $nearbyCategories = ['Hospital','College','Bus Stand','Airport','Railway Station','Other'];
                     @endphp
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between align-items-center">
-                            <span>Nearby famous places (hospital, school, bus stand)</span>
+                            <span>Nearby famous places (category, place name, travel time/distance)</span>
                             <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-nearby">Add place</button>
                         </label>
                         <div id="nearby-places-wrapper" class="d-flex flex-column gap-2">
                             @foreach($nearbyRows as $index => $row)
                                 <div class="row g-2 align-items-center nearby-place-row" data-index="{{ $index }}">
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" name="nearby_places[{{ $index }}][label]"
-                                               value="{{ $row['label'] ?? '' }}" placeholder="e.g. ABC Hospital">
-                                    </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control" name="nearby_places[{{ $index }}][distance]"
-                                               value="{{ $row['distance'] ?? '' }}" placeholder="e.g. 1.2 km">
+                                        <select name="nearby_places[{{ $index }}][category]" class="form-select">
+                                            @foreach($nearbyCategories as $cat)
+                                                <option value="{{ $cat }}" {{ (isset($row['category']) && $row['category'] == $cat) ? 'selected' : '' }}>{{ $cat }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    <div class="col-md-2 d-flex justify-content-end">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="nearby_places[{{ $index }}][name]"
+                                               value="{{ $row['name'] ?? '' }}" placeholder="e.g. ABC Hospital">
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-center">
+                                        <input type="text" class="form-control me-2" name="nearby_places[{{ $index }}][travel_time]"
+                                               value="{{ $row['travel_time'] ?? '' }}" placeholder="e.g. 10 min or 2.3 km">
                                         <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
                                             <i class="bi bi-x"></i>
                                         </button>
@@ -476,13 +455,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
             rows.forEach((row, index) => {
                 row.dataset.index = index;
-                const labelInput = row.querySelector('input[name*="[label]"]');
-                const distanceInput = row.querySelector('input[name*="[distance]"]');
-                if (labelInput) {
-                    labelInput.name = `nearby_places[${index}][label]`;
+                const categorySelect = row.querySelector('select[name*="[category]"]');
+                const nameInput = row.querySelector('input[name*="[name]"]');
+                const travelInput = row.querySelector('input[name*="[travel_time]"]');
+                if (categorySelect) {
+                    categorySelect.name = `nearby_places[${index}][category]`;
                 }
-                if (distanceInput) {
-                    distanceInput.name = `nearby_places[${index}][distance]`;
+                if (nameInput) {
+                    nameInput.name = `nearby_places[${index}][name]`;
+                }
+                if (travelInput) {
+                    travelInput.name = `nearby_places[${index}][travel_time]`;
                 }
             });
         }
@@ -492,13 +475,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('div');
             row.className = 'row g-2 align-items-center nearby-place-row';
             row.innerHTML = `
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="nearby_places[${index}][label]" placeholder="e.g. ABC Hospital">
-                </div>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="nearby_places[${index}][distance]" placeholder="e.g. 1.2 km">
+                    <select name="nearby_places[${index}][category]" class="form-select">
+                        <option>Hospital</option>
+                        <option>College</option>
+                        <option>Bus Stand</option>
+                        <option>Airport</option>
+                        <option>Railway Station</option>
+                        <option>Other</option>
+                    </select>
                 </div>
-                <div class="col-md-2 d-flex justify-content-end">
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="nearby_places[${index}][name]" placeholder="e.g. ABC Hospital">
+                </div>
+                <div class="col-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control me-2" name="nearby_places[${index}][travel_time]" placeholder="e.g. 10 min or 2.3 km">
                     <button type="button" class="btn btn-outline-danger btn-sm btn-remove-nearby">
                         <i class="bi bi-x"></i>
                     </button>
@@ -513,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rows = nearbyWrapper.querySelectorAll('.nearby-place-row');
                 if (rows.length === 1) {
                     // Just clear values on last row instead of removing
-                    rows[0].querySelectorAll('input').forEach(input => input.value = '');
+                    rows[0].querySelectorAll('input, select').forEach(input => input.value = '');
                 } else {
                     e.target.closest('.nearby-place-row').remove();
                     refreshIndexes();

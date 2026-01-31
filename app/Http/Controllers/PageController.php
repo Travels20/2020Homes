@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\Enquiry;
+use App\Mail\EnquiryNotificationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PageController extends Controller
 {
@@ -108,5 +111,67 @@ class PageController extends Controller
         }
 
         return view('property_show', compact('property'));
+    }
+
+    public function storeAppointment(Request $request)
+    {
+        \Log::info('storeAppointment called', $request->all());
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'preferred_date' => 'required|date|after_or_equal:today',
+            'message' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            // Try to find existing user by email; update basic details or create a new user
+            $user = null;
+            if (!empty($validated['email'])) {
+                $userModel = \App\Models\User::where('email', $validated['email'])->first();
+                if ($userModel) {
+                    $userModel->update([ 'name' => $validated['name'], 'phone' => $validated['phone'] ]);
+                    $user = $userModel;
+                } else {
+                    $user = \App\Models\User::create([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'],
+                        'phone' => $validated['phone'],
+                        'password' => \Illuminate\Support\Str::random(16),
+                        'role' => 'user',
+                    ]);
+                }
+            }
+
+            $createData = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'preferred_date' => $validated['preferred_date'],
+                'message' => $validated['message'] ?? null,
+                'source' => 'appointment_form',
+                'status' => 1,
+            ];
+
+            // If enquiries table has user_id column, attach the user id
+            if ($user && \Illuminate\Support\Facades\Schema::hasColumn('enquiries', 'user_id')) {
+                $createData['user_id'] = $user->id;
+            }
+
+            $enquiry = Enquiry::create($createData);
+
+            \Log::info('Enquiry created', ['id' => $enquiry->id ?? null]);
+
+            // Send notification email to admin
+            $adminEmail = config('mail.from.address') ?? 'info@2020homes.com';
+            Mail::to($adminEmail)->queue(new EnquiryNotificationMail($enquiry));
+
+        } catch (\Exception $e) {
+            \Log::error('Enquiry create failed: ' . $e->getMessage(), [$e]);
+            return redirect()->back()->withErrors('Unable to save your request at the moment. Please try again later.');
+        }
+
+        return redirect()->back()->with('success', 'Your consultation request has been submitted successfully! We will contact you soon.');
     }
 }

@@ -83,7 +83,7 @@
                 <div class="card-body p-4">
                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                     <p class="text-secondary small mb-3 text-truncate">
-                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
                     </p>
 
                     <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>

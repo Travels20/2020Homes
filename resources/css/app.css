@@ -3,9 +3,7 @@
 
 /* Custom Variables */
 :root {
-    /* Custom Color Palette */
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+   --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --info-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
     --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
@@ -47,7 +45,7 @@ body {
 
 /* Glassmorphism Card */
 .glass-card {
-    background: var(--glass-bg);
+    /* background: var(--glass-bg); */
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
@@ -489,4 +487,44 @@ body {
 
 .table-glass tbody tr:hover {
     background: rgba(255, 255, 255, 0.05);
+}
+/* Sidebar Submenu Styles */
+.sidebar-nav-submenu {
+    background: rgba(0, 0, 0, 0.05);
+    border-left: 3px solid #667eea;
+    padding: 0.5rem 0;
+    margin-top: 0.25rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.sidebar-nav-submenu .sidebar-nav-link {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem !important;
+    border-left: none;
+    transition: var(--transition-fast);
+}
+
+.sidebar-nav-submenu .sidebar-nav-link:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.sidebar-nav-submenu .sidebar-nav-link.active {
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
+    border-left: 3px solid #667eea;
+    padding-left: calc(1rem - 3px) !important;
+}
+
+/* Sidebar collapse toggle */
+.sidebar-nav-link[data-bs-toggle="collapse"] {
+    position: relative;
+}
+
+.sidebar-nav-link[data-bs-toggle="collapse"] .bi-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.sidebar-nav-link[data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down {
+    transform: rotate(-180deg);
 }

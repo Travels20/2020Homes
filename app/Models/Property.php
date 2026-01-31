@@ -21,6 +21,7 @@ class Property extends Model
         'banner_image',
         'address',
         'city',
+        'city_area',
         'state',
         'pincode',
         'latitude',

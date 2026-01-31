@@ -11,7 +11,12 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        $settings = SiteSetting::all()->pluck('value', 'key');
+        // Build settings array using SiteSetting::get to decode JSON values
+        $settings = [];
+        foreach (SiteSetting::all() as $s) {
+            $settings[$s->key] = SiteSetting::get($s->key);
+        }
+
         return view('dashboards.admin.settings', compact('settings'));
     }
 
@@ -44,10 +49,14 @@ class SettingsController extends Controller
         }
 
         if ($request->hasFile('banners')) {
-            // Delete old banners
+            // Delete old banners (supports both array and json string)
             $oldBanners = SiteSetting::get('banners');
-            if ($oldBanners) {
-                $paths = json_decode($oldBanners, true);
+            if ($oldBanners && is_array($oldBanners)) {
+                foreach ($oldBanners as $oldPath) {
+                    Storage::disk('s3')->delete($oldPath);
+                }
+            } elseif ($oldBanners && is_string($oldBanners)) {
+                $paths = @json_decode($oldBanners, true);
                 if (is_array($paths)) {
                     foreach ($paths as $oldPath) {
                         Storage::disk('s3')->delete($oldPath);
@@ -59,7 +68,8 @@ class SettingsController extends Controller
             foreach ($request->file('banners') as $banner) {
                 $bannerPaths[] = $banner->store('2020Homes/banner_image', 's3');
             }
-            SiteSetting::set('banners', json_encode($bannerPaths));
+            // SiteSetting::set will json_encode arrays automatically
+            SiteSetting::set('banners', $bannerPaths);
         }
 
         return back()->with('success', 'Settings updated successfully.');

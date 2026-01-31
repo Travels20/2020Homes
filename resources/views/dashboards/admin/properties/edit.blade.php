@@ -1,51 +1,23 @@
 @extends('layouts.dashboard')
 @section('title', 'Edit Property')
+
 @section('sidebar-menu')
-    @php
-        $isAdmin = in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true);
-    @endphp
-
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.dashboard') }}" class="sidebar-nav-link">
-            <i class="bi bi-speedometer2 sidebar-nav-icon"></i>
-            <span>Dashboard</span>
-        </a>
-    </li>
-
-    @if($isAdmin)
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.properties.index') }}" class="sidebar-nav-link">
-                <i class="bi bi-building sidebar-nav-icon"></i>
-                <span>Properties</span>
-            </a>
-        </li>
-    @else
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.my-properties') }}" class="sidebar-nav-link">
-                <i class="bi bi-building sidebar-nav-icon"></i>
-                <span>My Properties</span>
-            </a>
-        </li>
-    @endif
-
-    <li class="sidebar-nav-item">
-        <a href="{{ route('admin.properties.create') }}" class="sidebar-nav-link">
-            <i class="bi bi-plus-circle sidebar-nav-icon"></i>
-            <span>Add Property</span>
-        </a>
-    </li>
-
-    @if($isAdmin)
-        <li class="sidebar-nav-item">
-            <a href="{{ route('admin.settings.index') }}" class="sidebar-nav-link">
-                <i class="bi bi-gear sidebar-nav-icon"></i>
-                <span>Site Settings</span>
-            </a>
-        </li>
-    @endif
+    <x-admin-sidebar-menu />
 @endsection
 
 @section('content')
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-light ps-3 py-2 rounded">
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true) ? route('admin.properties.index') : route('admin.my-properties') }}" class="text-decoration-none">{{ in_array(auth()->user()->role ?? null, ['admin', 'superadmin'], true) ? 'All Properties' : 'My Properties' }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Property</li>
+    </ol>
+</nav>
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
@@ -114,11 +86,15 @@
                     <div class="row mb-3">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">District / City</label>
-                            <input type="text" name="state" class="form-control" value="{{ old('state', $property->state) }}" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label"> Area</label>
                             <input type="text" name="city" class="form-control" value="{{ old('city', $property->city) }}" required>
+                        </div>
+                        {{-- <div class="col-md-4 mb-3">
+                            <label class="form-label"> Area</label>
+                            <input type="text" name="city_area" class="form-control" value="{{ old('city_area', $property->city_area) }}" required>
+                        </div> --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">City / Area</label>
+                            <input type="text" name="city_area" class="form-control" value="{{ old('city_area', $property->city_area) }}" required>
                         </div>
 
                         <div class="col-md-4 mb-3">

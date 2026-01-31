@@ -76,7 +76,7 @@ class PropertyController extends Controller
             'price' => 'required|numeric',
             'area' => 'required|numeric',
             'city' => 'required|string',
-            'state' => 'required|string',
+            'city_area' => 'nullable|string',
             'description' => 'required|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
@@ -121,7 +121,8 @@ class PropertyController extends Controller
             'property_type' => $validated['property_type'],
             'listing_type' => $validated['listing_type'],
             'city' => $validated['city'],
-            'state' => $validated['state'],
+            'city_area' => $request->input('city_area'),
+            // 'state' => $validated['state'],
             'price' => $validated['price'],
             'area' => $validated['area'],
             'area_unit' => $request->input('area_unit', 'sq_ft'),
@@ -140,8 +141,9 @@ class PropertyController extends Controller
 
         // Handle Feature Image Upload to S3
         if ($request->hasFile('feature_image')) {
+            $filename = time() . '_' . Str::slug($property->title) . '.' . $request->file('feature_image')->getClientOriginalExtension();
             $path = $request->file('feature_image')
-                ->store('2020Homes/feature_images', 's3');
+                ->storeAs("2020Homes/{$validated['city']}/feature_images", $filename, 's3');
 
             Storage::disk('s3')->setVisibility($path, 'public');
 
@@ -150,8 +152,9 @@ class PropertyController extends Controller
 
         // Handle Banner Image Upload to S3
         if ($request->hasFile('banner_image')) {
+            $filename = time() . '_banner_' . Str::slug($property->title) . '.' . $request->file('banner_image')->getClientOriginalExtension();
             $path = $request->file('banner_image')
-                ->store('2020Homes/banner_images', 's3');
+                ->storeAs("2020Homes/{$validated['city']}/banner_images", $filename, 's3');
 
             Storage::disk('s3')->setVisibility($path, 'public');
 
@@ -161,7 +164,8 @@ class PropertyController extends Controller
         // Handle Gallery Images Upload to S3
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('2020Homes/gallery_images', 's3');
+                $filename = time() . '_gallery_' . Str::slug($property->title) . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs("2020Homes/{$validated['city']}/gallery_images", $filename, 's3');
 
                 Storage::disk('s3')->setVisibility($path, 'public');
 
@@ -215,7 +219,8 @@ class PropertyController extends Controller
             'price' => 'required|numeric',
             'area' => 'required|numeric',
             'city' => 'required|string',
-            'state' => 'required|string',
+            'city_area' => 'required|string',
+            // 'state' => 'required|string',
             'description' => 'required|string',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
@@ -252,7 +257,8 @@ class PropertyController extends Controller
             'property_type' => $validated['property_type'],
             'listing_type' => $validated['listing_type'],
             'city' => $validated['city'],
-            'state' => $validated['state'],
+            'city_area' => $request->input('city_area'),
+            // 'state' => $validated['state'],
             'price' => $validated['price'],
             'area' => $validated['area'],
             'area_unit' => $request->input('area_unit', 'sq_ft'),
@@ -285,8 +291,9 @@ class PropertyController extends Controller
                 Storage::disk('s3')->delete($property->feature_image);
             }
 
+            $filename = time() . '_' . Str::slug($validated['title']) . '.' . $request->file('feature_image')->getClientOriginalExtension();
             $path = $request->file('feature_image')
-                ->store('2020Homes/feature_images', 's3');
+                ->storeAs("2020Homes/{$validated['city']}/feature_images", $filename, 's3');
 
             Storage::disk('s3')->setVisibility($path, 'public');
 
@@ -300,8 +307,9 @@ class PropertyController extends Controller
                 Storage::disk('s3')->delete($property->banner_image);
             }
 
+            $filename = time() . '_banner_' . Str::slug($validated['title']) . '.' . $request->file('banner_image')->getClientOriginalExtension();
             $path = $request->file('banner_image')
-                ->store('2020Homes/banner_images', 's3');
+                ->storeAs("2020Homes/{$validated['city']}/banner_images", $filename, 's3');
 
             Storage::disk('s3')->setVisibility($path, 'public');
 
@@ -313,7 +321,8 @@ class PropertyController extends Controller
             $lastSortOrder = $property->images()->max('sort_order') ?? -1;
 
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('2020Homes/gallery_images', 's3');
+                $filename = time() . '_gallery_' . Str::slug($validated['title']) . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs("2020Homes/{$validated['city']}/gallery_images", $filename, 's3');
 
                 Storage::disk('s3')->setVisibility($path, 'public');
 

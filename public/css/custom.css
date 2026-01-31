@@ -2,7 +2,7 @@ body {
     background-color: #f4f6f9 !important; /* Soft Light Gray */
     color: #1a1a1a; /* Default Black Text */
     min-height: 100vh;
-    padding-top: 85px; /* From guest layout */
+    /* padding-top: 85px;  */
     display: flex;
     flex-direction: column;
 }
@@ -497,25 +497,26 @@ footer a.text-secondary:hover {
 }
 
 .bg-animated-gradient-1 {
-    background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7) !important;
+    /* background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7) !important; */
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
     background-size: 400% 400% !important;
     animation: gradientAnimation 15s ease infinite !important;
 }
 
 .bg-animated-gradient-2 {
-    background: linear-gradient(-45deg, #2af598, #009efd, #30cfd0, #330867) !important;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
     background-size: 400% 400% !important;
     animation: gradientAnimation 15s ease infinite !important;
 }
 
 .bg-animated-gradient-3 {
-    background: linear-gradient(-45deg, #f093fb, #f5576c, #fcc6a7, #f78ca0) !important;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
     background-size: 400% 400% !important;
     animation: gradientAnimation 15s ease infinite !important;
 }
 
 .bg-animated-gradient-4 {
-    background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fe9a8b, #ff7170) !important;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
     background-size: 400% 400% !important;
     animation: gradientAnimation 15s ease infinite !important;
 }

@@ -135,7 +135,7 @@
         <!-- Video Banner Content Overlay -->
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3" style="z-index: 2;">
             <div class="container">
-                <h2 class="fw-bold display-5 mb-3">Premium Real Estate Solutions</h2>
+                <h2 class="fw-bold display-5 mb-3">Find Your Perfect Property in Chennai</h2>
                 <p class="lead mb-4 opacity-90">Your trusted partner for finding dream properties</p>
                 <a href="{{ route('front.properties') }}" class="btn btn-danger btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">
                     <i class="bi bi-search me-2"></i>Explore Properties
@@ -152,7 +152,7 @@
         <!-- Header with Location Filters -->
         <div class="text-center mb-4">
             <h2 class="fw-bold mb-2 text-danger">Your Home. Your Dream. Your Choice</h2>
-            <p class="text-secondary mb-4">Choose your plot from India's Largest Plotted Real Estate Developer</p>
+            <p class="text-secondary mb-4">Choose your plot from India's Largest Plotted Real Ecity_area Developer</p>
             <!-- Location Tabs -->
             <div class="d-flex gap-3 flex-wrap location-tabs mb-4">
                 <a href="{{ route('front.properties', ['city' => 'Chennai']) }}">Chennai</a>
@@ -329,7 +329,7 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
                                     <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
                                     <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
@@ -375,7 +375,7 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
                                     <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
                                     <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
@@ -421,7 +421,7 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title fw-bold mb-1 text-truncate">{{ $property->title }}</h5>
                                     <p class="text-secondary small mb-3 text-truncate">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->state }}
+                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> {{ $property->city }}, {{ $property->city_area }}
                                     </p>
                                     <h4 class="text-primary fw-bold mb-3">₹{{ number_format($property->price / 100000, 2) }} Lakhs</h4>
                                     <a href="{{ route('property.show', $property->slug) }}" class="btn btn-outline-primary w-100 fw-bold">View Details</a>
@@ -437,9 +437,9 @@
     <!-- Property Types Section -->
     {{-- <section class="py-5 bg-light" id="property-categories">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3">Property Categories</h2>
-                <p class="text-secondary">Explore our diverse range of real estate options</p>
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-2 text-danger">Featured Properties</h2>
+                <p class="text-secondary mb-4">{{ \App\Models\SiteSetting::get('site_tagline', 'Choose your plot from our verified listings') }}</p>
             </div>
 
             <div class="row g-4">
@@ -487,7 +487,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold mb-3">Why Choose 2020Homes?</h2>
-            <p class="text-white-50">We provide the best real estate solutions for your needs</p>
+            <p class="text-white-50">We provide the best real ecity_area solutions for your needs</p>
         </div>
 
         <div class="row g-4">
@@ -537,7 +537,7 @@
                         <i class="bi bi-graph-up-arrow"></i>
                     </div>
                     <h4 class=" mb-3">Investment Advice</h4>
-                    <p class="text-secondary">Expert guidance for making smart real estate investments</p>
+                    <p class="text-secondary">Expert guidance for making smart real ecity_area investments</p>
                 </div>
             </div>
 
@@ -576,18 +576,23 @@
 </section>
 
 
-<!-- Top Real Estate Partner and Agent -->
+<!-- Top Real Ecity_area Partner and Agent -->
 <section class="py-5 bg-white" id="partners">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-3 text-danger">Top Real Estate Agents in Chennai</h2>
+            <h2 class="fw-bold mb-3 text-danger">Top Real Ecity_area Agents in Chennai</h2>
         </div>
 
-        <div class="row g-4 align-items-center justify-content-center">
-            {{-- Row 1 --}}
-            <div class="col-6 col-md-4 col-lg-2 text-center">
+        <div class="row g-4 justify-content-center justify-content-center">
+            <div class="col-12 text-center">
+                    <img src="{{ asset('images/partners.jpg') }}" alt="Top Real Ecity_area Agents in Chennai" class="img-fluid rounded-4 shadow-lg">
+               </div>
+        </div>
+
+        {{-- <div class="row g-4 align-items-center justify-content-center">
+              <div class="col-6 col-md-4 col-lg-2 text-center">
                 <div class="partner-logo p-3">
-                    <img src="{{ asset('images/partners/dlf.png') }}" alt="DLF Building India" class="img-fluid" style="max-height: 80px;">
+                    <img src="{{ asset('images/partners/dlf.jpg') }}" alt="DLF Building India" class="img-fluid" style="max-height: 80px;">
                 </div>
             </div>
             <div class="col-6 col-md-4 col-lg-2 text-center">
@@ -607,16 +612,15 @@
             </div>
             <div class="col-6 col-md-4 col-lg-2 text-center">
                 <div class="partner-logo p-3">
-                    <img src="{{ asset('images/partners/brigade.png') }}" alt="Brigade" class="img-fluid" style="max-height: 80px;">
+                    <img src="{{ asset('images/partners/urbann.png') }}" alt="Brigade" class="img-fluid" style="max-height: 80px;">
                 </div>
             </div>
         </div>
 
         <div class="row g-4 align-items-center justify-content-center mt-2">
-            {{-- Row 2 --}}
-            <div class="col-6 col-md-4 col-lg-2 text-center">
+             <div class="col-6 col-md-4 col-lg-2 text-center">
                 <div class="partner-logo p-3">
-                    <img src="{{ asset('images/partners/ansals.png') }}" alt="Ansals API" class="img-fluid" style="max-height: 80px;">
+                    <img src="{{ asset('images/partners/ansals.jpg') }}" alt="Ansals API" class="img-fluid" style="max-height: 80px;">
                 </div>
             </div>
             <div class="col-6 col-md-4 col-lg-2 text-center">
@@ -634,7 +638,7 @@
                     <img src="{{ asset('images/partners/casagrand.png') }}" alt="Casagrand" class="img-fluid" style="max-height: 80px;">
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </section>
 
@@ -664,7 +668,7 @@
                     <!-- Left Side - Title -->
                     <div class="col-md-3">
                         <h2 class="text-white fw-bold display-5 mb-0">Google Reviews</h2>
-                        <p class="text-white opacity-75 mb-0">for Real Estate Agents</p>
+                        <p class="text-white opacity-75 mb-0">for Real Ecity_area Agents</p>
                     </div>
 
                     <!-- Right Side - Review Cards -->
@@ -760,7 +764,7 @@
                                             </div>
                                         </div>
                                         <p class="small text-muted mb-2" style="font-size: 0.75rem; line-height: 1.3;">
-                                            Best real estate agents in Chennai! Quick responses and handled everything professionally.
+                                            Best real ecity_area agents in Chennai! Quick responses and handled everything professionally.
                                         </p>
                                         <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
                                              alt="Google" height="15">
@@ -828,31 +832,62 @@
             <div class="col-lg-6">
                 <div class="card border-0 shadow-lg p-2 p-md-3 h-100">
                     <div class="mb-4">
-                        <h2 class="fw-bold mb-3">Schedule a Free Consultation</h2>
+                        <h2 class="fw-bold mb-3">Appointment for Booking</h2>
                         <p class="text-secondary mb-0">Get expert advice on buying or selling your property</p>
                     </div>
-                    <form action="" method="POST">
+
+                    @if($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('appointment.store') }}" method="POST">
                         @csrf
                         <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="name" class="form-label">Your Name</label>
-                            <input type="text" id="name" name="name" class="form-control form-control" placeholder="Enter your full name" required>
+                            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Enter your full name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control form-control" placeholder="Enter your email" required>
+                            <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Enter your email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control form-control" placeholder="Enter your phone number" required>
+                            <input type="tel" id="phone" name="phone" class="form-control @error('phone') is-invalid @enderror" placeholder="Enter your phone number" value="{{ old('phone') }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="preferred_date" class="form-label">Preferred Consultation Date</label>
-                            <input type="date" id="preferred_date" name="preferred_date" class="form-control form-control" required>
+                            <input type="date" id="preferred_date" name="preferred_date" class="form-control @error('preferred_date') is-invalid @enderror" value="{{ old('preferred_date') }}" required>
+                            @error('preferred_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="message" class="form-label">Message (Optional)</label>
-                            <textarea id="message" name="message" class="form-control form-control" placeholder="Tell us more about your requirement" rows="3"></textarea>
+                            <textarea id="message" name="message" class="form-control" placeholder="Tell us more about your requirement" rows="3">{{ old('message') }}</textarea>
                         </div>
                         <div class=" d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg py-2 fw-bold">
@@ -887,10 +922,7 @@
                                 <!-- Address 1 -->
                                 <div class="mb-3 pb-3 border-bottom">
                                     <div class="d-flex gap-2 align-items-start">
-                                        {{-- <div class="bg-primary text-white rounded-circle p-2" style="min-width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                            <i class="bi bi-geo-alt-fill" style="font-size: 18px;"></i>
-                                        </div> --}}
-                                        <div class="flex-grow-1" style="min-width: 0;">
+                                         <div class="flex-grow-1" style="min-width: 0;">
                                             <h6 class="fw-bold mb-1 small">2020HOMES</h6>
                                             <p class="text-secondary mb-2" style="font-size: 1rem; line-height: 1.3;">
                                                No 72/32,28th Cross Street, <br>
@@ -918,7 +950,7 @@
 
 
   <!-- CTA Section -->
-<section class="py-5 bg-light">
+{{-- <section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -948,7 +980,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
 
 @endsection

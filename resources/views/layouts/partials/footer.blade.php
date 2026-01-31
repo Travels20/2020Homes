@@ -28,9 +28,9 @@
                 <div class="col-lg-2 col-6">
                     <h5 class="fw-bold mb-3">Property Types</h5>
                     <ul class="list-unstyled text-secondary">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-text-white">Residential Plots</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-text-white">Luxury Flats</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-text-white">Agricultural Land</a></li>
+                        <li class="mb-2"><a href="{{ route('front.properties', ['type' => 'plots']) }}" class="text-decoration-none text-secondary hover-text-white">Residential Plots</a></li>
+                        <li class="mb-2"><a href="{{ route('front.properties', ['type' => 'flats']) }}" class="text-decoration-none text-secondary hover-text-white">Luxury Flats</a></li>
+                        <li class="mb-2"><a href="{{ route('front.properties', ['type' => 'agriculture']) }}" class="text-decoration-none text-secondary hover-text-white">Agricultural Land</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-text-white">Commercial</a></li>
                     </ul>
                 </div>

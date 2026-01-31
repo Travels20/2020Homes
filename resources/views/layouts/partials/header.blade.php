@@ -10,6 +10,10 @@
     ];
     $activeType = $typeMap[$rawType] ?? null;
     $onPropertyList = request()->routeIs('front.properties');
+
+    // NRI cities for dropdown
+    $nriCities = ['Chennai', 'Coimbatore', 'Trichy', 'Madurai'];
+    $nriActive = request()->routeIs('front.properties') && in_array(request('city'), $nriCities);
 @endphp
 
 <style>
@@ -85,6 +89,26 @@
 
     .modern-nav-link.active::before {
         width: 80%;
+    }
+
+    /* Dropdown menu styling to match modern nav */
+    .modern-dropdown {
+        border-radius: 10px;
+        padding: .25rem;
+        min-width: 12rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .modern-dropdown .dropdown-item {
+        color: #2c3e50;
+        padding: .5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .modern-dropdown .dropdown-item:hover {
+        background-color: #f0fdf4;
+        color: #059669;
     }
 
     /* WhatsApp Button */
@@ -192,6 +216,20 @@
         .navbar-nav {
             margin-bottom: 0 !important;
         }
+
+        .modern-dropdown {
+            position: static !important;
+            transform: none !important;
+            box-shadow: none !important;
+            width: 100%;
+            background: transparent;
+            padding: 0;
+        }
+
+        .modern-dropdown .dropdown-item {
+            padding-left: 0.75rem;
+            background: transparent;
+        }
     }
 
     @media (min-width: 992px) {
@@ -256,10 +294,24 @@
                             Agri Land
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link modern-nav-link {{ request()->is('contact*') ? 'active' : '' }}" href="{{ route('front.contact') }}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle modern-nav-link {{ $nriActive ? 'active' : '' }}" href="#" id="nriDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             NRI Property
                         </a>
+                        <ul class="dropdown-menu modern-dropdown" aria-labelledby="nriDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Chennai']) }}">Chennai</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Coimbatore']) }}">Coimbatore</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Trichy']) }}">Trichy</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('front.properties', ['city' => 'Madurai']) }}">Madurai</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -267,6 +319,8 @@
                     <i class="bi bi-whatsapp"></i>
                     <span>944 500 2020</span>
                 </a>
+
+
             </div>
         </div>
     </div>

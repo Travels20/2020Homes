@@ -42,7 +42,7 @@
               <h1 class=" fw-bold  mb-2">{{ $property->title }}</h1>
                <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-geo-alt-fill me-2 text-primary"></i>
-                        <span class="fs-5">{{ $property->city }}, {{ $property->state }}</span>
+                        <span class="fs-5">{{ $property->city }}, {{ $property->city_area }}</span>
                     </div>
             <!-- Key Features Grid -->
             <div class="card glass-card border-0 mb-5">
@@ -159,7 +159,7 @@
                             <i class="bi bi-geo-alt-fill text-primary fs-4 me-3 mt-1"></i>
                             <div>
                                 <h6 class="fw-bold mb-1">Address</h6>
-                                <p class="mb-0 text-secondary">{{ $property->address }}, {{ $property->city }}, {{ $property->state }}</p>
+                                <p class="mb-0 text-secondary">{{ $property->address }}, {{ $property->city }}, {{ $property->city_area }}</p>
                             </div>
                         </div>
                         @endif

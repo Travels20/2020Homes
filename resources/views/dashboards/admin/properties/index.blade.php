@@ -22,12 +22,6 @@
             <span>Add Property</span>
         </a>
     </li>
-    {{-- <li class="sidebar-nav-item">
-        <a href="#" class="sidebar-nav-link">
-            <i class="bi bi-cash-stack sidebar-nav-icon"></i>
-            <span>Transactions</span>
-        </a>
-    </li> --}}
     <li class="sidebar-nav-item">
         <a href="#" class="sidebar-nav-link">
             <i class="bi bi-envelope sidebar-nav-icon"></i>
@@ -127,7 +121,7 @@
                                         <h6 class="mb-1 fw-bold text-dark text-truncate" style="max-width: 200px;">{{ $property->title }}</h6>
                                         <small class="text-secondary d-flex align-items-center">
                                             <i class="bi bi-geo-alt-fill me-1 text-primary" style="font-size: 0.8rem;"></i>
-                                            {{ $property->city }}, {{ $property->state }}
+                                            {{ $property->city }}, {{ $property->city_area }}
                                         </small>
                                     </div>
                                 </div>

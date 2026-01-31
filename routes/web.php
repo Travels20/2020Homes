@@ -14,6 +14,7 @@ Route::get('/properties', [PageController::class, 'properties'])->name('front.pr
 Route::get('/about', [PageController::class, 'about'])->name('front.about');
 Route::get('/contact', [PageController::class, 'contact'])->name('front.contact');
 Route::get('/property/{slug}', [PageController::class, 'show'])->name('property.show');
+Route::post('/appointment', [PageController::class, 'storeAppointment'])->name('appointment.store');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -30,10 +31,20 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOTP'])->name('otp.veri
 // Dashboard Routes (Protected)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Admin + Staff Routes
     Route::middleware('role:admin,superadmin,staff')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+            // Enquiries list (admin + staff)
+            Route::get('/enquiries', [DashboardController::class, 'enquiries'])->name('enquiries.index');
+
+        // Walk-in Enquiry (admin + staff)
+        Route::get('/enquiries/walk-in', [DashboardController::class, 'walkInForm'])->name('enquiries.walk-in');
+        Route::post('/enquiries/walk-in', [DashboardController::class, 'storeWalkIn'])->name('enquiries.store-walk-in');
+
+        // Users list (admin + staff)
+        Route::get('/users', [DashboardController::class, 'users'])->name('users.index');
 
         // Staff can only see their own properties here
         Route::get('/my-properties', [\App\Http\Controllers\Admin\PropertyController::class, 'myProperties'])

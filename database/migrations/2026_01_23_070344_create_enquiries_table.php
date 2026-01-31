@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('enquiries', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->date('preferred_date')->nullable();
+            $table->text('message')->nullable();
             $table->string('source')->nullable();
             $table->string('mobile')->nullable();
-            $table->string('email')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
         });

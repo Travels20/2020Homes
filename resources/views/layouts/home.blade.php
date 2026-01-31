@@ -4,7 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', \App\Models\SiteSetting::get('site_name', '2020Homes')) - {{ \App\Models\SiteSetting::get('site_tagline', 'Premium Real Estate') }}</title>
+    @php
+        $seoTitle = \App\Models\SiteSetting::get('seo_title');
+        $seoContent = \App\Models\SiteSetting::get('seo_content');
+        $defaultTitle = \App\Models\SiteSetting::get('site_name', '2020Homes');
+        $defaultTagline = \App\Models\SiteSetting::get('site_tagline', 'Premium Real Estate');
+    @endphp
+    <title>@yield('title', $seoTitle ?? $defaultTitle) - {{ $defaultTagline }}</title>
+
+    <meta name="description" content="{{ $seoContent ?? $defaultTagline }}">
+    <meta property="og:title" content="{{ $seoTitle ?? $defaultTitle }}">
+    <meta property="og:description" content="{{ $seoContent ?? $defaultTagline }}">
 
     <!-- Dynamic Favicon -->
     @php $faviconUrl = \App\Models\SiteSetting::url('favicon'); @endphp
